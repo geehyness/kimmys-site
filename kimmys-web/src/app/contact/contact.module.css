@@ -1,0 +1,9 @@
+/* src/app/contact/contact.module.css */
+.container {
+  padding: 20px;
+  font-family: sans-serif;
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+/* Add more specific styles for the contact page here */

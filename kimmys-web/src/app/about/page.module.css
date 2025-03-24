@@ -1,0 +1,9 @@
+/* src/app/about/about.module.css */
+.container {
+  padding: 20px;
+  font-family: sans-serif;
+  max-width: 960px; /* Limit width for better readability on larger screens */
+  margin: 0 auto; /* Center the content */
+}
+
+/* Add more specific styles for the about page here */
