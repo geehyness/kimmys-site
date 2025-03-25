@@ -1,17 +1,17 @@
 .hero {
-    padding: 6rem 0;
-    background: 
-      linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
-      url('/images/menu-bg.jpg') center/cover no-repeat;
-    color: white;
-    text-align: center;
-    margin-bottom: 3rem;
-    min-height: 60vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    animation: fadeIn 0.8s ease-out;
-  }
+  padding: 4rem 0; /* Reduced from 6rem */
+  margin-top: 0; /* Ensure no extra margin */
+  background: 
+    linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
+    url('/images/menu-bg.jpg') center/cover no-repeat;
+  color: white;
+  text-align: center;
+  min-height: calc(60vh - 70px); /* Subtract header height */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 0.8s ease-out;
+}
   
   .categoryFilters {
     display: flex;
