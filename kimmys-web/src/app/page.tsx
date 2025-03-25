@@ -21,7 +21,7 @@ export default function HomePage() {
     async function fetchData() {
       try {
         // Fetch featured meals (limit to 6 for homepage)
-        const featuredMealsQuery = `*[_type == "meal" && isAvailable == true && featured == true][0...6] {
+        const featuredMealsQuery = `*[_type == "meal" && isAvailable == true][0...6] {
           _id,
           _type,
           name,
