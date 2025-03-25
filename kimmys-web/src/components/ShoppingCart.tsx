@@ -1,6 +1,8 @@
+// components/ShoppingCart.tsx
 'use client';
 
 import { useShoppingCart } from '@/context/ShoppingCartContext';
+import { urlFor } from '@/lib/sanity';
 import styles from './ShoppingCart.module.css';
 
 export default function ShoppingCart() {
@@ -17,7 +19,7 @@ export default function ShoppingCart() {
   return (
     <div className={styles.cartContainer}>
       <div className={styles.cartHeader}>
-        <h2>Your Cart ({getTotalItems()})</h2>
+        <h2>Your Order ({getTotalItems()})</h2>
         <button 
           className={styles.closeButton}
           onClick={closeCart}
@@ -30,50 +32,66 @@ export default function ShoppingCart() {
       {cartItems.length === 0 ? (
         <div className={styles.emptyCart}>
           <p>Your cart is empty</p>
+          <button 
+            className={styles.continueShopping}
+            onClick={closeCart}
+          >
+            Continue Shopping
+          </button>
         </div>
       ) : (
         <>
           <ul className={styles.cartItems}>
-            {cartItems.map((item) => (
-              <li key={item._id} className={styles.cartItem}>
-                <div className={styles.itemImage}>
-                  {item.image?.asset?.url ? (
-                    <img 
-                      src={item.image.asset.url} 
-                      alt={item.name}
-                      width={80}
-                      height={80}
-                    />
-                  ) : (
-                    <div className={styles.imagePlaceholder} />
+            {cartItems.map((item) => {
+              const imageUrl = item.image?.asset?.url 
+                ? item.image.asset.url 
+                : item.image?.asset?._ref 
+                  ? urlFor(item.image).width(100).url() 
+                  : null;
+
+              return (
+                <li key={item._id} className={styles.cartItem}>
+                  {imageUrl && (
+                    <div className={styles.itemImage}>
+                      <img 
+                        src={imageUrl} 
+                        alt={item.name}
+                        width={80}
+                        height={80}
+                        loading="lazy"
+                      />
+                    </div>
                   )}
-                </div>
-                <div className={styles.itemDetails}>
-                  <h3>{item.name}</h3>
-                  <p>R{item.price.toFixed(2)}</p>
-                  <div className={styles.quantityControls}>
-                    <button 
-                      onClick={() => updateQuantity(item._id, item.quantity - 1)}
-                      disabled={item.quantity <= 1}
-                    >
-                      −
-                    </button>
-                    <span>{item.quantity}</span>
-                    <button 
-                      onClick={() => updateQuantity(item._id, item.quantity + 1)}
-                    >
-                      +
-                    </button>
+                  <div className={styles.itemDetails}>
+                    <h3>{item.name}</h3>
+                    <p>R{item.price.toFixed(2)}</p>
+                    <div className={styles.quantityControls}>
+                      <button 
+                        onClick={() => updateQuantity(item._id, item.quantity - 1)}
+                        disabled={item.quantity <= 1}
+                        aria-label="Decrease quantity"
+                      >
+                        −
+                      </button>
+                      <span>{item.quantity}</span>
+                      <button 
+                        onClick={() => updateQuantity(item._id, item.quantity + 1)}
+                        aria-label="Increase quantity"
+                      >
+                        +
+                      </button>
+                    </div>
                   </div>
-                </div>
-                <button 
-                  className={styles.removeButton}
-                  onClick={() => removeFromCart(item._id)}
-                >
-                  ×
-                </button>
-              </li>
-            ))}
+                  <button 
+                    className={styles.removeButton}
+                    onClick={() => removeFromCart(item._id)}
+                    aria-label="Remove item"
+                  >
+                    ×
+                  </button>
+                </li>
+              );
+            })}
           </ul>
           
           <div className={styles.cartFooter}>
@@ -86,13 +104,16 @@ export default function ShoppingCart() {
                 className={styles.clearButton}
                 onClick={clearCart}
               >
-                Clear Cart
+                Clear Order
               </button>
               <button 
                 className={styles.checkoutButton}
-                onClick={() => alert('Proceeding to checkout')}
+                onClick={() => {
+                  alert('Proceeding to checkout');
+                  closeCart();
+                }}
               >
-                Checkout
+                Checkout (R{getCartTotal().toFixed(2)})
               </button>
             </div>
           </div>

@@ -1,15 +1,16 @@
-// src/app/menu/page.tsx
+// app/menu/page.tsx
 import { client } from '@/lib/sanity';
 import Layout from '@/components/Layout';
-import styles from '../page.module.css'; // Reuse styles from homepage
-import MealCard from '@/components/MealCard'; // Import the MealCard component
+import styles from '../page.module.css';
+import MealCard from '@/components/MealCard';
 
-async function getData() {
-  const query = `*[_type == "meal"] {
+async function getMenuItems() {
+  const query = `*[_type == "meal" && isAvailable == true] | order(name asc) {
     _id,
     name,
     description,
     price,
+    category,
     image {
       asset-> {
         _id,
@@ -17,33 +18,27 @@ async function getData() {
       }
     }
   }`;
-  try {
-    const data = await client.fetch(query);
-    return data;
-  } catch (error) {
-    console.error("Error fetching menu data from Sanity:", error);
-    return;
-  }
+  return await client.fetch(query);
 }
 
 export default async function MenuPage() {
-  const meals = await getData();
+  const menuItems = await getMenuItems();
 
   return (
     <Layout>
       <div className={styles.container}>
         <h1>Our Full Menu</h1>
-        <section className={styles.mealsSection}>
-          {meals && meals.length > 0 ? (
+        {menuItems.length > 0 ? (
+          <div className={styles.mealsSection}>
             <div className={styles.mealsGrid}>
-              {meals.map((meal) => (
-                <MealCard key={meal._id} meal={meal} />
+              {menuItems.map((item) => (
+                <MealCard key={item._id} meal={item} />
               ))}
             </div>
-          ) : (
-            <p>Our menu is currently being updated. Please check back soon!</p>
-          )}
-        </section>
+          </div>
+        ) : (
+          <p>Our menu is currently being updated. Please check back soon!</p>
+        )}
       </div>
     </Layout>
   );

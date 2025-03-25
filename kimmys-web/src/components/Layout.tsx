@@ -1,10 +1,11 @@
+// components/Layout.tsx
 'use client';
 
 import { useShoppingCart } from '@/context/ShoppingCartContext';
 import Header from './Header';
-import Footer from './Footer';
 import ShoppingCart from './ShoppingCart';
 import styles from './Layout.module.css';
+import Footer from './Footer';
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   const { isCartOpen, toggleCart, getTotalItems, closeCart } = useShoppingCart();
@@ -18,7 +19,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       
       {/* Floating Cart Button */}
       <button 
-        className={styles.floatingCartButton}
+        className={`${styles.floatingCartButton} ${getTotalItems() > 0 ? styles.hasItems : ''}`}
         onClick={toggleCart}
         aria-label="Shopping Cart"
       >
@@ -37,8 +38,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           </div>
         </>
       )}
-      
-      <Footer />
+
+<br /><br />
+      <Footer/>
     </div>
   );
 }

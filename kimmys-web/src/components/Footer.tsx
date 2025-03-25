@@ -1,3 +1,4 @@
+// components/Footer.tsx
 import Link from 'next/link';
 import styles from './Footer.module.css';
 
@@ -9,26 +10,29 @@ export default function Footer() {
       <div className={styles.container}>
         <div className={styles.footerContent}>
           <div className={styles.footerSection}>
-            <h3 className={styles.footerHeading}>Kimmy's</h3>
-            <p>Delicious local meals made with love</p>
+            <h3 className={styles.footerHeading}>Kimmy's Fast Foods</h3>
+            <p className={styles.footerText}>Delicious meals made with love since 2010</p>
           </div>
           
           <div className={styles.footerSection}>
             <h3 className={styles.footerHeading}>Quick Links</h3>
             <ul className={styles.footerLinks}>
-              <li><Link href="/">Home</Link></li>
-              <li><Link href="/menu">Menu</Link></li>
-              <li><Link href="/specials">Specials</Link></li>
-              <li><Link href="/about">About Us</Link></li>
-              <li><Link href="/contact">Contact</Link></li>
+              {['Home', 'Menu', 'Specials', 'About', 'Contact'].map((item) => (
+                <li key={item}>
+                  <Link href={`/${item.toLowerCase()}`} className={styles.footerLink}>
+                    {item}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
           
+           
           <div className={styles.footerSection}>
-            <h3 className={styles.footerHeading}>Contact Us</h3>
-            <p>123 Food Street</p>
-            <p>Johannesburg, 2000</p>
-            <p>Phone: (011) 123-4567</p>
+            <h3 className={styles.footerHeading}>Where To Find Us</h3>
+            <p>Zakhele</p>
+            <p>Manzini, M200</p>
+            <p>Phone: (+268) 7959 1427</p>
           </div>
         </div>
         
@@ -39,3 +43,6 @@ export default function Footer() {
     </footer>
   );
 }
+
+
+

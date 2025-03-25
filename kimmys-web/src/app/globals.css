@@ -1,76 +1,100 @@
-/* Ensure these styles are in your globals.css */
-.container {
-  padding: 20px;
-  font-family: sans-serif;
+/* app/globals.css */
+:root {
+  --primary: #e63946;
+  --primary-dark: #c1121f;
+  --secondary: #f8f9fa;
+  --dark: #1a1a1a;
+  --light: #ffffff;
+  --accent: #f77f00;
+  --neutral: #6c757d;
+  --header-footer-bg: var(--neutral);
 }
 
-.header {
+body {
+  background-color: var(--secondary);
+  color: var(--dark);
+  font-family: 'Inter', sans-serif;
+  line-height: 1.6;
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+main {
+  min-height: calc(100vh - 200px);
+  padding-bottom: 2rem;
+}
+
+h1, h2, h3 {
+  font-weight: 700;
+  line-height: 1.2;
+  margin: 0 0 1rem 0;
+}
+
+h1 {
+  font-size: clamp(2rem, 5vw, 2.5rem);
+  color: var(--primary);
+}
+
+h2 {
+  font-size: clamp(1.5rem, 4vw, 2rem);
+  position: relative;
+  display: inline-block;
+}
+
+h2::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  left: 0;
+  width: 60px;
+  height: 4px;
+  background: var(--primary);
+}
+
+a {
+  color: var(--primary);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+a:hover {
+  color: var(--primary-dark);
+}
+
+.btn {
+  display: inline-block;
+  padding: 0.6rem 1.2rem;
+  border-radius: 4px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.btn-primary {
+  background-color: var(--primary);
+  color: white;
+  border: none;
+}
+
+.btn-primary:hover {
+  background-color: var(--primary-dark);
+  transform: translateY(-2px);
+}
+
+.text-center {
   text-align: center;
+}
+
+.mb-30 {
   margin-bottom: 30px;
 }
 
-.header h1 {
-  font-size: 2.5em;
-  margin-bottom: 10px;
-}
-
-.mealsSection {
-  margin-bottom: 40px;
-}
-
-.mealsSection h2 {
-  font-size: 2em;
-  margin-bottom: 15px;
-}
-
-.mealsGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 20px;
-}
-
-.mealCard {
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  overflow: hidden;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  background-color: white;
-}
-
-.mealImageContainer {
-  position: relative;
-  width: 100%;
-  aspect-ratio: 16 / 9; /* You can adjust the aspect ratio as needed */
-  overflow: hidden;
-}
-
-.mealImage {
-  object-fit: cover;
-}
-
-.mealContent {
-  padding: 15px;
-}
-
-.mealTitle {
-  font-size: 1.5em;
-  margin-bottom: 5px;
-}
-
-.mealDescription {
-  color: #555;
-  margin-bottom: 10px;
-}
-
-.mealPrice {
-  font-weight: bold;
-  color: green;
-}
-
-.footer {
-  text-align: center;
-  margin-top: 30px;
-  padding-top: 20px;
-  border-top: 1px solid #eee;
-  color: #777;
+.mt-40 {
+  margin-top: 40px;
 }

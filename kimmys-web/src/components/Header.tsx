@@ -1,3 +1,4 @@
+// components/Header.tsx
 'use client';
 
 import Link from 'next/link';
@@ -24,53 +25,45 @@ export default function Header() {
       <div className={styles.container}>
         <div className={styles.logo}>
           <Link href="/" onClick={closeAll}>
-            Kimmy's
+            <span className={styles.logoMain}>Kimmy's</span>
+            <span className={styles.logoSub}>Fast Foods</span>
           </Link>
         </div>
         
-        {/* Desktop Navigation */}
         <nav className={styles.desktopNav}>
           <ul className={styles.navList}>
-            <li className={styles.navItem}>
-              <Link href="/" className={styles.navLink} onClick={closeAll}>
-                Home
-              </Link>
-            </li>
-            <li className={styles.navItem}>
-              <Link href="/menu" className={styles.navLink} onClick={closeAll}>
-                Menu
-              </Link>
-            </li>
-            <li className={styles.navItem}>
-              <Link href="/specials" className={styles.navLink} onClick={closeAll}>
-                Specials
-              </Link>
-            </li>
-            <li className={styles.navItem}>
-              <Link href="/about" className={styles.navLink} onClick={closeAll}>
-                About Us
-              </Link>
-            </li>
-            <li className={styles.navItem}>
-              <Link href="/contact" className={styles.navLink} onClick={closeAll}>
-                Contact
-              </Link>
-            </li>
+            {[
+              { path: '/', name: 'Home' },
+              { path: '/menu', name: 'Menu' },
+              { path: '/specials', name: 'Specials' },
+              { path: '/about', name: 'About' },
+              { path: '/contact', name: 'Contact' }
+            ].map((item) => (
+              <li key={item.path} className={styles.navItem}>
+                <Link 
+                  href={item.path} 
+                  className={styles.navLink} 
+                  onClick={closeAll}
+                >
+                  {item.name}
+                </Link>
+              </li>
+            ))}
             <li className={styles.navItem}>
               <button 
                 className={styles.cartButton}
                 onClick={toggleCart}
+                aria-label={`Cart (${getTotalItems()} items)`}
               >
-                Cart ({getTotalItems()})
+                🛒 {getTotalItems() > 0 && <span>{getTotalItems()}</span>}
               </button>
             </li>
           </ul>
         </nav>
 
-        {/* Mobile Navigation */}
         <div className={styles.mobileNav}>
           <button 
-            className={styles.menuButton}
+            className={`${styles.menuButton} ${isMenuOpen ? styles.open : ''}`}
             onClick={handleToggleMenu}
             aria-label="Toggle menu"
             aria-expanded={isMenuOpen}
@@ -81,31 +74,23 @@ export default function Header() {
           {isMenuOpen && (
             <div className={styles.mobileMenu}>
               <ul className={styles.navList}>
-                <li className={styles.navItem}>
-                  <Link href="/" className={styles.navLink} onClick={closeAll}>
-                    Home
-                  </Link>
-                </li>
-                <li className={styles.navItem}>
-                  <Link href="/menu" className={styles.navLink} onClick={closeAll}>
-                    Menu
-                  </Link>
-                </li>
-                <li className={styles.navItem}>
-                  <Link href="/specials" className={styles.navLink} onClick={closeAll}>
-                    Specials
-                  </Link>
-                </li>
-                <li className={styles.navItem}>
-                  <Link href="/about" className={styles.navLink} onClick={closeAll}>
-                    About Us
-                  </Link>
-                </li>
-                <li className={styles.navItem}>
-                  <Link href="/contact" className={styles.navLink} onClick={closeAll}>
-                    Contact
-                  </Link>
-                </li>
+                {[
+                  { path: '/', name: 'Home' },
+                  { path: '/menu', name: 'Menu' },
+                  { path: '/specials', name: 'Specials' },
+                  { path: '/about', name: 'About' },
+                  { path: '/contact', name: 'Contact' }
+                ].map((item) => (
+                  <li key={item.path} className={styles.navItem}>
+                    <Link 
+                      href={item.path} 
+                      className={styles.navLink} 
+                      onClick={closeAll}
+                    >
+                      {item.name}
+                    </Link>
+                  </li>
+                ))}
                 <li className={styles.navItem}>
                   <button 
                     className={styles.cartButton}
@@ -114,7 +99,7 @@ export default function Header() {
                       setIsMenuOpen(false);
                     }}
                   >
-                    Cart ({getTotalItems()})
+                    🛒 Cart ({getTotalItems()})
                   </button>
                 </li>
               </ul>

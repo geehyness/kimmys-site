@@ -9,7 +9,7 @@ import Footer from '@/components/Footer';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: "Kimmy's Restaurant",
+  title: "Kimmy's",
   description: 'Best local meals in town',
 };
 
@@ -23,10 +23,7 @@ export default function RootLayout({
       <body className={inter.className}>
         <ShoppingCartProvider>
           <Header />
-          <br />
           <main>{children}</main>
-          <br />
-          <hr />
           <Footer />
         </ShoppingCartProvider>
       </body>

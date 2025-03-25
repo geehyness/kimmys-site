@@ -1,68 +1,74 @@
-/* src/components/MealCard.module.css */
+/* components/MealCard.module.css */
 .mealCard {
-    border: 1px solid #e2e8f0;
-    border-radius: 0.5rem;
-    overflow: hidden;
-    transition: transform 0.2s;
-    background: white;
-  }
-  
-  .mealCard:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  }
-  
-  .imageContainer {
-    position: relative;
-    width: 100%;
-    height: 200px;
-  }
-  
-  .image {
-    object-fit: cover;
-  }
-  
-  .imagePlaceholder {
-    height: 200px;
-    background: #f1f5f9;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #64748b;
-  }
-  
-  .content {
-    padding: 1rem;
-  }
-  
-  .description {
-    color: #64748b;
-    margin: 0.5rem 0;
-    font-size: 0.9rem;
-  }
-  
-  .footer {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 1rem;
-  }
-  
-  .price {
-    font-weight: bold;
-    color: #1e40af;
-  }
-  
-  .addButton {
-    background: #3b82f6;
-    color: white;
-    border: none;
-    padding: 0.5rem 1rem;
-    border-radius: 0.25rem;
-    cursor: pointer;
-    transition: background 0.2s;
-  }
-  
-  .addButton:hover {
-    background: #2563eb;
-  }
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.mealCard:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+}
+
+.imageContainer {
+  position: relative;
+  width: 100%;
+  height: 200px;
+  overflow: hidden;
+}
+
+.image {
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.mealCard:hover .image {
+  transform: scale(1.05);
+}
+
+.content {
+  padding: 1.5rem;
+}
+
+.title {
+  font-size: 1.25rem;
+  margin-bottom: 0.75rem;
+  color: var(--dark);
+}
+
+.description {
+  color: var(--neutral);
+  margin-bottom: 1.25rem;
+  font-size: 0.9rem;
+}
+
+.footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.price {
+  font-weight: bold;
+  color: var(--primary);
+  font-size: 1.1rem;
+}
+
+.addButton {
+  background: var(--primary);
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.addButton:hover {
+  background: var(--primary-dark);
+}

@@ -6,7 +6,7 @@ export default function CartPage() {
   return (
     <Layout>
       <div className="container">
-        
+        <ShoppingCart/>
       </div>
     </Layout>
   );

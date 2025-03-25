@@ -3,7 +3,6 @@
 import { useEffect, useState } from 'react';
 import { client } from '@/lib/sanity';
 import MealCard from '@/components/MealCard';
-import Layout from '@/components/Layout';
 import styles from './page.module.css';
 
 export default function ClientPage() {
@@ -22,26 +21,24 @@ export default function ClientPage() {
   }, []);
 
   return (
-    <Layout>
-      <div className={styles.container}>
-        <section className={styles.hero}>
-          <h1>Welcome to Kimmy's!</h1>
-          <p>Your go-to place for delicious local meals</p>
-        </section>
+    <div className="container">
+      <section className={styles.hero}>
+        <h1>Welcome to Kimmy's!</h1>
+        <p>Your go-to place for delicious local meals</p>
+      </section>
 
-        <section className={styles.mealsSection}>
-          <h2>Our Menu</h2>
-          {meals.length > 0 ? (
-            <div className={styles.mealsGrid}>
-              {meals.map((meal) => (
-                <MealCard key={meal._id} meal={meal} />
-              ))}
-            </div>
-          ) : (
-            <p>Our menu is currently being updated. Please check back soon!</p>
-          )}
-        </section>
-      </div>
-    </Layout>
+      <section className={styles.mealsSection}>
+        <h2>Our Menu</h2>
+        {meals.length > 0 ? (
+          <div className={styles.mealsGrid}>
+            {meals.map((meal) => (
+              <MealCard key={meal._id} meal={meal} />
+            ))}
+          </div>
+        ) : (
+          <p>Our menu is currently being updated. Please check back soon!</p>
+        )}
+      </section>
+    </div>
   );
 }
