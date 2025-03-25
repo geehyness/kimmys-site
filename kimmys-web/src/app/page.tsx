@@ -112,7 +112,7 @@ export default function MenuPage() {
     <>
       <section className={styles.hero}>
         <div className="container">
-          <h1>Our Full Menu</h1>
+          <h1>Welcome to Kimmy/'s</h1>
           <p>Filter by category or browse all items</p>
         </div>
       </section>
