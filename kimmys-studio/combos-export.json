@@ -1,0 +1,154 @@
+[
+  {
+    "_createdAt": "2025-03-25T09:55:18Z",
+    "_type": "combo",
+    "name": "Student Meal",
+    "_id": "644754ea-8d19-466e-83f2-8a30640486dc",
+    "_updatedAt": "2025-03-25T09:55:19Z",
+    "isAvailable": true,
+    "price": 40,
+    "_rev": "MBs86ihGgxetNe5QpGun3B",
+    "meals": [
+      {
+        "_ref": "b23fdd23-23a9-44f8-b0f4-3f9698e01dd0",
+        "_type": "reference",
+        "_key": "xL4xiPMV"
+      },
+      {
+        "_ref": "1fd70148-2097-42cd-99d3-8c591e46f09f",
+        "_type": "reference",
+        "_key": "jQFwoiYr"
+      },
+      {
+        "_ref": "4e6f1c0a-5809-4b93-932b-c2190da0d091",
+        "_type": "reference",
+        "_key": "lqG8tihv"
+      }
+    ]
+  },
+  {
+    "_updatedAt": "2025-03-25T09:55:19Z",
+    "isAvailable": true,
+    "price": 60,
+    "_createdAt": "2025-03-25T09:55:18Z",
+    "_id": "919b3694-41e5-40ed-8544-4d4650da054b",
+    "meals": [
+      {
+        "_ref": "50713cd1-7412-41aa-9b05-d837c4b4694e",
+        "_type": "reference",
+        "_key": "VJdUlYjc"
+      },
+      {
+        "_ref": "3680526a-ee87-4d77-b3fd-1b544a5ccd6d",
+        "_type": "reference",
+        "_key": "iaumjsmJ"
+      },
+      {
+        "_type": "reference",
+        "_key": "vbARwxBE",
+        "_ref": "d614a922-f244-4804-ad72-95364409d7f4"
+      }
+    ],
+    "_rev": "MBs86ihGgxetNe5QpGun3B",
+    "_type": "combo",
+    "name": "Chicken Feast"
+  },
+  {
+    "isAvailable": true,
+    "_type": "combo",
+    "_id": "9768c642-9794-40c7-81e5-53a937ed052e",
+    "price": 45,
+    "_createdAt": "2025-03-25T09:39:14Z",
+    "_rev": "G4d7Or8h4qvaZPftG2EIJD",
+    "name": "Kota Special",
+    "_updatedAt": "2025-03-25T09:39:15Z",
+    "meals": [
+      {
+        "_key": "PtOhzF7L",
+        "_ref": "48001d69-c9c8-47cd-9ff8-56a2e55e4b1e",
+        "_type": "reference"
+      },
+      {
+        "_ref": "d614a922-f244-4804-ad72-95364409d7f4",
+        "_type": "reference",
+        "_key": "RyiuuKNr"
+      }
+    ]
+  },
+  {
+    "_type": "combo",
+    "name": "Chicken Feast",
+    "_id": "c9781f90-8f01-46f0-b8f0-6409440b7db8",
+    "isAvailable": true,
+    "price": 60,
+    "_createdAt": "2025-03-25T09:39:14Z",
+    "_rev": "G4d7Or8h4qvaZPftG2EIJD",
+    "_updatedAt": "2025-03-25T09:39:15Z",
+    "meals": [
+      {
+        "_ref": "50713cd1-7412-41aa-9b05-d837c4b4694e",
+        "_type": "reference",
+        "_key": "tXZ2ZmZV"
+      },
+      {
+        "_ref": "3680526a-ee87-4d77-b3fd-1b544a5ccd6d",
+        "_type": "reference",
+        "_key": "d5zD3jT6"
+      },
+      {
+        "_ref": "d614a922-f244-4804-ad72-95364409d7f4",
+        "_type": "reference",
+        "_key": "tjOrcrWm"
+      }
+    ]
+  },
+  {
+    "isAvailable": true,
+    "price": 40,
+    "_rev": "G4d7Or8h4qvaZPftG2EIJD",
+    "name": "Student Meal",
+    "_updatedAt": "2025-03-25T09:39:15Z",
+    "meals": [
+      {
+        "_ref": "b23fdd23-23a9-44f8-b0f4-3f9698e01dd0",
+        "_type": "reference",
+        "_key": "KwMZtnr2"
+      },
+      {
+        "_key": "5cOK6qR5",
+        "_ref": "1fd70148-2097-42cd-99d3-8c591e46f09f",
+        "_type": "reference"
+      },
+      {
+        "_key": "6eU03ap5",
+        "_ref": "4e6f1c0a-5809-4b93-932b-c2190da0d091",
+        "_type": "reference"
+      }
+    ],
+    "_createdAt": "2025-03-25T09:39:14Z",
+    "_type": "combo",
+    "_id": "c9d3568f-4627-4131-9e9e-5f7aabf3b182"
+  },
+  {
+    "isAvailable": true,
+    "price": 45,
+    "_type": "combo",
+    "name": "Kota Special",
+    "_id": "fb59dc4e-602e-4afb-a981-99da8f8b9445",
+    "_updatedAt": "2025-03-25T09:55:19Z",
+    "meals": [
+      {
+        "_ref": "48001d69-c9c8-47cd-9ff8-56a2e55e4b1e",
+        "_type": "reference",
+        "_key": "f3YT7fZP"
+      },
+      {
+        "_ref": "d614a922-f244-4804-ad72-95364409d7f4",
+        "_type": "reference",
+        "_key": "8R6b4qag"
+      }
+    ],
+    "_createdAt": "2025-03-25T09:55:18Z",
+    "_rev": "MBs86ihGgxetNe5QpGun3B"
+  }
+]
