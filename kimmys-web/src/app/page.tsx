@@ -20,7 +20,7 @@ export default function HomePage() {
   useEffect(() => {
     async function fetchData() {
       try {
-        // Fetch featured meals (limit to 6 for homepage)
+        // Fetch available meals (limit to 6 for homepage)
         const featuredMealsQuery = `*[_type == "meal" && isAvailable == true][0...6] {
           _id,
           _type,
@@ -89,7 +89,7 @@ export default function HomePage() {
       {/* Hero Section */}
       <section className={styles.hero}>
         <div className={`container ${styles.heroContent}`}>
-          <h1>Welcome to Kimmy&apos;s Kitchen</h1>
+          <h1>Welcome to Kimmy&apos;s</h1>
           <p>Delicious meals made with love</p>
           <Link href="/menu" className={styles.ctaButton}>
             View Full Menu
@@ -102,8 +102,8 @@ export default function HomePage() {
         <h2>Popular Categories</h2>
         <div className={styles.categoryGrid}>
           {categories.map(category => (
-            <Link 
-              key={category._id} 
+            <Link
+              key={category._id}
               href={`/menu?category=${category.slug.current}`}
               className={styles.categoryCard}
             >
