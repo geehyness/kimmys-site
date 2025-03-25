@@ -1,9 +1,10 @@
+// components/Footer.tsx
 import Link from 'next/link';
 import styles from './Footer.module.css';
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
-  
+
   return (
     <footer className={styles.footer}>
       <div className={styles.container}>
@@ -12,7 +13,7 @@ export default function Footer() {
             <h3 className={styles.footerHeading}>Kimmy&apos;s Fast Foods</h3>
             <p className={styles.footerText}>Delicious meals made with love since 2010</p>
           </div>
-          
+
           <div className={styles.footerSection}>
             <h3 className={styles.footerHeading}>Quick Links</h3>
             <ul className={styles.footerLinks}>
@@ -23,9 +24,14 @@ export default function Footer() {
                   </Link>
                 </li>
               ))}
+              <li>
+                <Link href="/orders/search" className={styles.footerLink}>
+                  Track Order
+                </Link>
+              </li>
             </ul>
           </div>
-           
+
           <div className={styles.footerSection}>
             <h3 className={styles.footerHeading}>Where To Find Us</h3>
             <p>Zakhele</p>
@@ -33,7 +39,7 @@ export default function Footer() {
             <p>Phone: (+268) 7959 1427</p>
           </div>
         </div>
-        
+
         <div className={styles.copyright}>
           &copy; {currentYear} Kimmy&apos;s. All rights reserved.
         </div>

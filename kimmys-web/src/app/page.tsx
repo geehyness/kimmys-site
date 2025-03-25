@@ -5,127 +5,141 @@ import { client } from '@/lib/sanity';
 import styles from './page.module.css';
 import MealCard from '@/components/MealCard';
 import { Meal, Category } from '@/types/meal';
+import Link from 'next/link';
 
-// Client components
-function CategoryFilters({ 
-  categories,
-  activeCategory,
-  setActiveCategory 
-}: { 
-  categories: Category[];
-  activeCategory: string | null;
-  setActiveCategory: (category: string | null) => void;
-}) {
-  return (
-    <div className={styles.categoryFilters}>
-      <button
-        className={`${styles.filterButton} ${!activeCategory ? styles.active : ''}`}
-        onClick={() => setActiveCategory(null)}
-      >
-        All Items
-      </button>
-      
-      {categories.map(category => (
-        <button
-          key={category._id}
-          className={`${styles.filterButton} ${activeCategory === category._id ? styles.active : ''}`}
-          onClick={() => setActiveCategory(category._id)}
-        >
-          {category.title}
-        </button>
-      ))}
-    </div>
-  );
+interface CategoryWithCount extends Category {
+  mealCount: number;
 }
 
-function MealsGrid({ meals, activeCategory }: { meals: Meal[], activeCategory: string | null }) {
-  const [filteredMeals, setFilteredMeals] = useState<Meal[]>(meals);
-
-  useEffect(() => {
-    if (!activeCategory) {
-      setFilteredMeals(meals);
-    } else {
-      setFilteredMeals(meals.filter(meal => meal.category._id === activeCategory));
-    }
-  }, [activeCategory, meals]);
-
-  return (
-    <div className={styles.mealsGrid}>
-      {filteredMeals.length > 0 ? (
-        filteredMeals.map(meal => (
-          <MealCard key={meal._id} meal={meal} />
-        ))
-      ) : (
-        <p className={styles.noItems}>No items found in this category</p>
-      )}
-    </div>
-  );
-}
-
-export default function MenuPage() {
-  const [meals, setMeals] = useState<Meal[]>([]);
-  const [categories, setCategories] = useState<Category[]>([]);
-  const [activeCategory, setActiveCategory] = useState<string | null>(null);
+export default function HomePage() {
+  const [featuredMeals, setFeaturedMeals] = useState<Meal[]>([]);
+  const [categories, setCategories] = useState<CategoryWithCount[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     async function fetchData() {
-      const mealQuery = `*[_type == "meal"] {
-        _id,
-        name,
-        description,
-        price,
-        isAvailable,
-        category->{
+      try {
+        // Fetch featured meals (limit to 6 for homepage)
+        const featuredMealsQuery = `*[_type == "meal" && isAvailable == true && featured == true][0...6] {
           _id,
-          title,
-          slug
-        },
-        image {
-          asset-> {
+          _type,
+          name,
+          description,
+          price,
+          isAvailable,
+          featured,
+          "category": category->{
             _id,
-            url
+            _type,
+            title,
+            slug {
+              current
+            }
+          },
+          image {
+            asset-> {
+              _id,
+              _type,
+              url
+            }
           }
-        }
-      }`;
+        }`;
 
-      const categoriesQuery = `*[_type == "category"] | order(title asc) {
-        _id,
-        title,
-        slug
-      }`;
+        // Fetch popular categories with meal counts
+        const categoriesQuery = `*[_type == "category" && popular == true] | order(title asc) {
+          _id,
+          _type,
+          title,
+          slug {
+            current
+          },
+          "mealCount": count(*[_type == "meal" && references(^._id) && isAvailable == true])
+        }`;
 
-      const [mealsData, categoriesData] = await Promise.all([
-        client.fetch<Meal[]>(mealQuery),
-        client.fetch<Category[]>(categoriesQuery)
-      ]);
+        const [mealsData, categoriesData] = await Promise.all([
+          client.fetch<Meal[]>(featuredMealsQuery),
+          client.fetch<CategoryWithCount[]>(categoriesQuery)
+        ]);
 
-      setMeals(mealsData);
-      setCategories(categoriesData);
+        setFeaturedMeals(mealsData || []);
+        setCategories(categoriesData || []);
+      } catch (err) {
+        console.error("Error fetching data:", err);
+        setError('Failed to load content. Please try again later.');
+      } finally {
+        setLoading(false);
+      }
     }
 
     fetchData();
   }, []);
 
-  const availableMeals = meals.filter(meal => meal.isAvailable);
+  if (loading) return (
+    <div className={styles.loadingContainer}>
+      <div className={styles.spinner}></div>
+      <p>Loading...</p>
+    </div>
+  );
+
+  if (error) return <div className={styles.error}>{error}</div>;
 
   return (
-    <>
+    <main className={styles.homePage}>
+      {/* Hero Section */}
       <section className={styles.hero}>
-        <div className="container">
-          <h1>Welcome to Kimmy/'s</h1>
-          <p>Filter by category or browse all items</p>
+        <div className={`container ${styles.heroContent}`}>
+          <h1>Welcome to Kimmy&apos;s Kitchen</h1>
+          <p>Delicious meals made with love</p>
+          <Link href="/menu" className={styles.ctaButton}>
+            View Full Menu
+          </Link>
         </div>
       </section>
 
-      <section className={`container ${styles.mealsSection}`}>
-        <CategoryFilters 
-          categories={categories} 
-          activeCategory={activeCategory}
-          setActiveCategory={setActiveCategory}
-        />
-        <h2 className="text-center">Menu Items</h2>
-        <MealsGrid meals={availableMeals} activeCategory={activeCategory} />
+      {/* Featured Categories */}
+      <section className={`container ${styles.section}`}>
+        <h2>Popular Categories</h2>
+        <div className={styles.categoryGrid}>
+          {categories.map(category => (
+            <Link 
+              key={category._id} 
+              href={`/menu?category=${category.slug.current}`}
+              className={styles.categoryCard}
+            >
+              <h3>{category.title}</h3>
+              <p>{category.mealCount} items</p>
+            </Link>
+          ))}
+        </div>
       </section>
-    </>
+
+      {/* Featured Meals */}
+      <section className={`container ${styles.section}`}>
+        <div className={styles.sectionHeader}>
+          <h2>Featured Dishes</h2>
+          <Link href="/menu" className={styles.viewAll}>
+            View All Menu Items →
+          </Link>
+        </div>
+        <div className={styles.mealsGrid}>
+          {featuredMeals.length > 0 ? (
+            featuredMeals.map(meal => (
+              <MealCard key={meal._id} meal={meal} />
+            ))
+          ) : (
+            <p className={styles.noItems}>No featured meals available</p>
+          )}
+        </div>
+      </section>
+
+      {/* Call to Action */}
+      <section className={`container ${styles.ctaSection}`}>
+        <h2>Ready to order?</h2>
+        <Link href="/menu" className={styles.ctaButton}>
+          Browse Full Menu
+        </Link>
+      </section>
+    </main>
   );
 }

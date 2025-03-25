@@ -20,7 +20,7 @@
   width: 60px;
   height: 60px;
   border-radius: 50%;
-  background-color: #e63946;
+  background-color: var(--primary);
   color: white;
   border: none;
   cursor: pointer;
@@ -33,7 +33,7 @@
 }
 
 .floatingCartButton:hover {
-  background-color: #c1121f;
+  background-color: var(--primary-dark);
   transform: scale(1.05);
 }
 
@@ -46,11 +46,11 @@
   top: -5px;
   right: -5px;
   background-color: white;
-  color: #e63946;
+  color: var(--primary);
   border-radius: 50%;
   width: 24px;
   height: 24px;
-  display: none; /* Hidden by default */
+  display: none;
   align-items: center;
   justify-content: center;
   font-size: 0.75rem;
@@ -58,11 +58,11 @@
 }
 
 .hasItems .cartBadge {
-  display: flex; /* Show when items exist */
+  display: flex;
 }
 
 /* Cart Overlay */
-.overlay {
+.overlayBackdrop {
   position: fixed;
   top: 0;
   left: 0;
@@ -70,9 +70,17 @@
   bottom: 0;
   background-color: rgba(0, 0, 0, 0.5);
   z-index: 1000;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
 }
 
-.cartWrapper {
+.overlayBackdrop.open {
+  opacity: 1;
+  visibility: visible;
+}
+
+.cartOverlay {
   position: fixed;
   top: 0;
   right: 0;
@@ -84,9 +92,10 @@
   box-shadow: -4px 0 12px rgba(0, 0, 0, 0.1);
   transform: translateX(100%);
   transition: transform 0.3s ease;
+  overflow-y: auto;
 }
 
-.cartWrapper.open {
+.cartOverlay.open {
   transform: translateX(0);
 }
 
@@ -98,7 +107,7 @@
     height: 50px;
   }
   
-  .cartWrapper {
+  .cartOverlay {
     max-width: 100%;
   }
 }

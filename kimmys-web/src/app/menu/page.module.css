@@ -1,5 +1,5 @@
 .hero {
-  padding: 4rem 0; /* Reduced from 6rem */
+  padding: 1rem 0; /* Reduced from 6rem */
   margin-top: 0; /* Ensure no extra margin */
   background: 
     linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
@@ -85,3 +85,41 @@
       grid-template-columns: 1fr;
     }
   }
+
+
+  /* page.module.css */
+
+/* ... your existing styles ... */
+
+.loadingContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 300px; /* Adjust as needed */
+}
+
+.spinner {
+  border: 4px solid rgba(0, 0, 0, 0.1);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border-left-color: #007bff; /* Your primary color */
+  animation: spin 1s linear infinite;
+  margin-bottom: 10px;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.error {
+  color: red;
+  padding: 20px;
+  text-align: center;
+}

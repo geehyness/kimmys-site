@@ -5,9 +5,12 @@
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   position: relative;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
-.mealCard:hover {
+.mealCard.hovered {
   transform: translateY(-5px);
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
 }
@@ -23,9 +26,10 @@
   transform: scaleX(0);
   transform-origin: left;
   transition: transform 0.3s ease;
+  z-index: 1;
 }
 
-.mealCard:hover::before {
+.mealCard.hovered::before {
   transform: scaleX(1);
 }
 
@@ -41,6 +45,14 @@
   transition: transform 0.3s ease;
 }
 
+.image.loading {
+  opacity: 0;
+}
+
+.image.loaded {
+  opacity: 1;
+}
+
 .imageHover {
   transform: scale(1.05);
 }
@@ -53,6 +65,20 @@
   align-items: center;
   justify-content: center;
   color: var(--neutral);
+  position: relative;
+}
+
+.spinner {
+  width: 24px;
+  height: 24px;
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: var(--primary);
+  animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
 }
 
 .categoryBadge {
@@ -65,10 +91,14 @@
   border-radius: 4px;
   font-size: 0.75rem;
   font-weight: 500;
+  z-index: 1;
 }
 
 .content {
   padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
 }
 
 .title {
@@ -81,12 +111,14 @@
   color: var(--neutral);
   margin-bottom: 1.25rem;
   font-size: 0.9rem;
+  flex-grow: 1;
 }
 
 .footer {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-top: auto;
 }
 
 .price {
@@ -102,17 +134,47 @@
   padding: 0.5rem 1rem;
   border-radius: 4px;
   cursor: pointer;
-  transition: background 0.3s ease;
+  transition: all 0.3s ease;
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  position: relative;
+  overflow: hidden;
 }
 
 .addButton:hover {
   background: var(--primary-dark);
+  transform: translateY(-2px);
 }
 
 .addButton:focus {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
+}
+
+.addButton.hasQuantity {
+  background: var(--success);
+  padding-right: 2rem;
+}
+
+.addButton.hasQuantity:hover {
+  background: var(--success-dark);
+}
+
+.addButton:disabled {
+  background: var(--neutral-light);
+  cursor: not-allowed;
+  transform: none;
+}
+
+.buttonText {
+  position: relative;
+  z-index: 1;
+}
+
+.buttonPlus {
+  font-size: 1.1rem;
+  line-height: 1;
+  position: relative;
+  z-index: 1;
 }

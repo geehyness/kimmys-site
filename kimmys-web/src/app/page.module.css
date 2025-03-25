@@ -1,7 +1,6 @@
-/* app/page.module.css */
 .hero {
   padding: 4rem 0;
-  background: 
+  background:
     linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
     url('/images/hero-bg.jpg') center/cover;
   color: white;
@@ -31,4 +30,21 @@
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 2rem;
   margin-top: 2rem;
+}
+
+.loading {
+  text-align: center;
+  padding: 2rem;
+  font-size: 1.2rem;
+  color: var(--neutral);
+}
+
+.error {
+  text-align: center;
+  padding: 2rem;
+  font-size: 1.2rem;
+  color: #e63946;
+  background: rgba(230, 57, 70, 0.1);
+  border-radius: 8px;
+  margin: 2rem 0;
 }

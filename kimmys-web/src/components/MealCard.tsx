@@ -1,71 +1,90 @@
-'use client'
+'use client';
 
-import Image from 'next/image'
-import { useShoppingCart } from '@/context/ShoppingCartContext'
-import { urlFor } from '@/lib/sanity'
-import styles from './MealCard.module.css'
-import { useState } from 'react'
-import { MealCardProps } from '@/types/meal'
+import Image from 'next/image';
+import { useShoppingCart } from '@/context/ShoppingCartContext';
+import { urlFor } from '@/lib/sanity';
+import styles from './MealCard.module.css';
+import { useState } from 'react';
+import { MealCardProps } from '@/types/meal';
+
+// Helper type for expanded categories only (removed unused CategoryReference)
+type ExpandedCategory = {
+  _id: string;
+  _type: 'category';
+  title: string;
+  slug: {
+    current: string;
+  };
+};
 
 export default function MealCard({ meal }: MealCardProps) {
-  const { addToCart, getItemQuantity } = useShoppingCart()
-  const [isHovered, setIsHovered] = useState(false)
+  const { addToCart, getItemQuantity } = useShoppingCart();
+  const [isHovered, setIsHovered] = useState(false);
+  const [isImageLoading, setIsImageLoading] = useState(true);
+  const quantity = getItemQuantity(meal._id);
 
   const handleAddToCart = () => {
+    if (!meal.isAvailable) return;
+    
     addToCart({
       _id: meal._id,
       name: meal.name,
       price: meal.price,
       image: meal.image
-    })
-  }
+    });
+  };
 
-  const imageUrl = meal.image?.asset?.url 
-    ? meal.image.asset.url 
-    : meal.image?.asset?._ref 
-      ? urlFor(meal.image).url() 
-      : null
+  const getCategoryTitle = () => {
+    if (!meal.category) return undefined;
+    if ('title' in meal.category) {
+      return (meal.category as ExpandedCategory).title;
+    }
+    return undefined;
+  };
+
+  const categoryTitle = getCategoryTitle();
+
+  if (!meal.isAvailable) return null;
 
   return (
-    <div 
-      className={styles.mealCard}
+    <article 
+      className={`${styles.mealCard} ${isHovered ? styles.hovered : ''}`}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
       <div className={styles.imageContainer}>
-        {imageUrl ? (
+        {meal.image?.asset?.url && (
           <Image
-            src={imageUrl}
+            src={urlFor(meal.image).width(600).height(400).url()}
             alt={meal.name}
             fill
-            className={`${styles.image} ${isHovered ? styles.imageHover : ''}`}
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            className={`${styles.image} ${isImageLoading ? styles.loading : styles.loaded}`}
+            onLoadingComplete={() => setIsImageLoading(false)}
           />
-        ) : (
-          <div className={styles.imagePlaceholder}>No Image</div>
         )}
-        {meal.category && (
+        {categoryTitle && (
           <span className={styles.categoryBadge}>
-            {meal.category.title}
+            {categoryTitle}
           </span>
         )}
       </div>
+
       <div className={styles.content}>
         <h3 className={styles.title}>{meal.name}</h3>
         {meal.description && (
           <p className={styles.description}>{meal.description}</p>
         )}
         <div className={styles.footer}>
-          <span className={styles.price}>R{meal.price.toFixed(2)}</span>
+          <span className={styles.price}>R{meal.price?.toFixed(2)}</span>
           <button 
-            className={`${styles.addButton} ${isHovered ? styles.addButtonHover : ''}`}
             onClick={handleAddToCart}
-            aria-label={`Add ${meal.name} to cart`}
+            className={`${styles.addButton} ${quantity > 0 ? styles.hasQuantity : ''}`}
+            disabled={!meal.isAvailable}
           >
-            Add ({getItemQuantity(meal._id)})
+            {quantity > 0 ? `(${quantity}) Add More` : 'Add to Cart'}
           </button>
         </div>
       </div>
-    </div>
-  )
+    </article>
+  );
 }

@@ -5,6 +5,8 @@ import { ShoppingCartProvider } from '@/context/ShoppingCartContext';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import styles from '@/components/Layout.module.css';
+import ShoppingCart from '@/components/ShoppingCart';
+import FloatingCartButton from '@/components/FloatingCartButton';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -27,15 +29,9 @@ export default function RootLayout({
             <main className={styles.mainContent}>
               {children}
             </main>
-            <button 
-              id="cart-button"
-              className={styles.floatingCartButton}
-              aria-label="Shopping Cart"
-            >
-              <span className={styles.cartIcon}>🛒</span>
-              <span id="cart-count" className={styles.cartBadge}></span>
-            </button>
+            <FloatingCartButton />
             <Footer />
+            <ShoppingCart />
           </div>
         </ShoppingCartProvider>
       </body>

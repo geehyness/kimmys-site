@@ -10,13 +10,14 @@ const NAV_ITEMS = [
   { path: '/menu', name: 'Menu' },
   { path: '/specials', name: 'Specials' },
   { path: '/about', name: 'About' },
-  { path: '/contact', name: 'Contact' }
+  { path: '/contact', name: 'Contact' },
+  { path: '/orders/search', name: 'Track Order' },
 ];
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { getTotalItems, toggleCart, closeCart, isCartOpen } = useShoppingCart();
-  const mobileMenuRef = useRef(null);
+  const mobileMenuRef = useRef<HTMLDivElement>(null); // Added type for ref
 
   const closeAll = () => {
     closeCart();
@@ -30,14 +31,14 @@ export default function Header() {
 
   // Close menu when clicking outside
   useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (mobileMenuRef.current && !mobileMenuRef.current.contains(event.target)) {
+    const handleClickOutside = (event: MouseEvent) => { // Added MouseEvent type
+      if (mobileMenuRef.current && !mobileMenuRef.current.contains(event.target as Node)) {
         setIsMenuOpen(false);
       }
     };
 
     // Close menu on escape key
-    const handleEscape = (event) => {
+    const handleEscape = (event: KeyboardEvent) => { // Added KeyboardEvent type
       if (event.key === 'Escape') {
         setIsMenuOpen(false);
       }
@@ -62,14 +63,14 @@ export default function Header() {
             <span className={styles.logoMain}>Kimmy&apos;s</span>
           </Link>
         </div>
-        
+
         <nav className={styles.desktopNav}>
           <ul className={styles.navList}>
             {NAV_ITEMS.map((item) => (
               <li key={item.path} className={styles.navItem}>
-                <Link 
-                  href={item.path} 
-                  className={styles.navLink} 
+                <Link
+                  href={item.path}
+                  className={styles.navLink}
                   onClick={closeAll}
                 >
                   {item.name}
@@ -77,7 +78,7 @@ export default function Header() {
               </li>
             ))}
             <li className={styles.navItem}>
-              <button 
+              <button
                 className={styles.cartButton}
                 onClick={handleToggleCart}
                 aria-label={`Cart (${getTotalItems()} items)`}
@@ -90,7 +91,7 @@ export default function Header() {
         </nav>
 
         <div className={styles.mobileNav} ref={mobileMenuRef}>
-          <button 
+          <button
             className={`${styles.menuButton} ${isMenuOpen ? styles.open : ''}`}
             onClick={() => setIsMenuOpen(!isMenuOpen)}
             aria-label="Toggle menu"
@@ -98,14 +99,14 @@ export default function Header() {
           >
             <span className={styles.hamburger}></span>
           </button>
-          
+
           <div className={`${styles.mobileMenu} ${isMenuOpen ? styles.open : ''}`}>
             <ul className={styles.navList}>
               {NAV_ITEMS.map((item) => (
                 <li key={item.path} className={styles.navItem}>
-                  <Link 
-                    href={item.path} 
-                    className={styles.navLink} 
+                  <Link
+                    href={item.path}
+                    className={styles.navLink}
                     onClick={closeAll}
                   >
                     {item.name}
@@ -113,7 +114,7 @@ export default function Header() {
                 </li>
               ))}
               <li className={styles.navItem}>
-                <button 
+                <button
                   className={styles.cartButton}
                   onClick={handleToggleCart}
                   aria-label={`Cart (${getTotalItems()} items)`}

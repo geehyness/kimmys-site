@@ -25,39 +25,63 @@ export interface Meal {
     asset: {
       _ref: string;
       _type: 'reference';
+      url?: string;
     };
   };
-  category: Category;
-  isAvailable: boolean;
-}
-
-export interface MealCardProps {
-  meal: Omit<Meal, '_type'> & {
-    image?: {
-      asset?: {
-        url?: string;
-        _ref?: string;
-      };
-    };
-  };
+  category?: {
+    _ref: string;
+    _type: 'reference';
+  } | Category;
+  isAvailable?: boolean;
 }
 
 export default function ClientPage() {
-  const [meals, setMeals] = useState<Meal>();
+  const [meals, setMeals] = useState<Meal[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     async function fetchMeals() {
-      const query = `*[_type == "meal"] {
-        _id, name, description, price,
-        image { asset-> { _id, url } },
-        category-> { _id, title, slug },
-        isAvailable
-      }`;
-      const data: Meal = await client.fetch(query);
-      setMeals(data);
+      try {
+        setLoading(true);
+        const query = `*[_type == "meal" && isAvailable == true] {
+          _id, 
+          name, 
+          description, 
+          price,
+          isAvailable,
+          image { 
+            asset-> { 
+              _id, 
+              url 
+            } 
+          },
+          category-> { 
+            _id, 
+            title, 
+            slug 
+          }
+        }`;
+        const data: Meal[] = await client.fetch(query);
+        setMeals(data);
+      } catch (err) {
+        setError('Failed to load meals. Please try again later.');
+        console.error('Error fetching meals:', err);
+      } finally {
+        setLoading(false);
+      }
     }
+    
     fetchMeals();
-  });
+  }, []);
+
+  if (loading) {
+    return <div className={styles.loading}>Loading menu items...</div>;
+  }
+
+  if (error) {
+    return <div className={styles.error}>{error}</div>;
+  }
 
   return (
     <div className="container">
@@ -68,7 +92,7 @@ export default function ClientPage() {
 
       <section className={styles.mealsSection}>
         <h2>Our Menu</h2>
-        {Array.isArray(meals) && meals.length > 0 ? (
+        {meals.length > 0 ? (
           <div className={styles.mealsGrid}>
             {meals.map((meal) => (
               <MealCard key={meal._id} meal={meal} />
