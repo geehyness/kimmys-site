@@ -1,3 +1,4 @@
+/* components/Layout.module.css */
 .layout {
   display: flex;
   flex-direction: column;
@@ -7,7 +8,7 @@
 
 .mainContent {
   flex: 1;
-  padding-top: 100px; /* Matches header height + extra space */
+  padding-top: 80px; /* Header height */
   padding-bottom: 2rem;
 }
 
@@ -19,7 +20,7 @@
   width: 60px;
   height: 60px;
   border-radius: 50%;
-  background-color: #3b82f6;
+  background-color: #e63946;
   color: white;
   border: none;
   cursor: pointer;
@@ -32,7 +33,7 @@
 }
 
 .floatingCartButton:hover {
-  background-color: #2563eb;
+  background-color: #c1121f;
   transform: scale(1.05);
 }
 
@@ -44,16 +45,20 @@
   position: absolute;
   top: -5px;
   right: -5px;
-  background-color: #ef4444;
-  color: white;
+  background-color: white;
+  color: #e63946;
   border-radius: 50%;
   width: 24px;
   height: 24px;
-  display: flex;
+  display: none; /* Hidden by default */
   align-items: center;
   justify-content: center;
   font-size: 0.75rem;
   font-weight: bold;
+}
+
+.hasItems .cartBadge {
+  display: flex; /* Show when items exist */
 }
 
 /* Cart Overlay */
@@ -78,14 +83,11 @@
   z-index: 1001;
   box-shadow: -4px 0 12px rgba(0, 0, 0, 0.1);
   transform: translateX(100%);
-  animation: slideIn 0.3s forwards;
-  display: flex;
-  flex-direction: column;
+  transition: transform 0.3s ease;
 }
 
-@keyframes slideIn {
-  from { transform: translateX(100%); }
-  to { transform: translateX(0); }
+.cartWrapper.open {
+  transform: translateX(0);
 }
 
 @media (max-width: 768px) {

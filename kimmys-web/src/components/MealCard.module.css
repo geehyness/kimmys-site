@@ -1,15 +1,32 @@
-/* components/MealCard.module.css */
 .mealCard {
   background: white;
   border-radius: 8px;
   overflow: hidden;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
+  position: relative;
 }
 
 .mealCard:hover {
   transform: translateY(-5px);
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+}
+
+.mealCard::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: var(--primary);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s ease;
+}
+
+.mealCard:hover::before {
+  transform: scaleX(1);
 }
 
 .imageContainer {
@@ -24,8 +41,30 @@
   transition: transform 0.3s ease;
 }
 
-.mealCard:hover .image {
+.imageHover {
   transform: scale(1.05);
+}
+
+.imagePlaceholder {
+  width: 100%;
+  height: 100%;
+  background: var(--secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--neutral);
+}
+
+.categoryBadge {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: var(--primary);
+  color: white;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 500;
 }
 
 .content {
@@ -71,4 +110,9 @@
 
 .addButton:hover {
   background: var(--primary-dark);
+}
+
+.addButton:focus {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }

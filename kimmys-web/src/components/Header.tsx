@@ -1,4 +1,3 @@
-// components/Header.tsx
 'use client';
 
 import Link from 'next/link';
@@ -25,8 +24,7 @@ export default function Header() {
       <div className={styles.container}>
         <div className={styles.logo}>
           <Link href="/" onClick={closeAll}>
-            <span className={styles.logoMain}>Kimmy's</span>
-            <span className={styles.logoSub}>Fast Foods</span>
+            <span className={styles.logoMain}>Kimmy&apos;s</span>
           </Link>
         </div>
         

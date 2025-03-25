@@ -1,4 +1,3 @@
-/* app/globals.css */
 :root {
   --primary: #e63946;
   --primary-dark: #c1121f;
@@ -17,12 +16,13 @@ body {
   line-height: 1.6;
   margin: 0;
   padding: 0;
+  transition: color 0.2s ease, background-color 0.2s ease;
 }
 
 .container {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 20px;
+  padding: 0 clamp(1rem, 5vw, 2rem);
 }
 
 main {
@@ -45,6 +45,7 @@ h2 {
   font-size: clamp(1.5rem, 4vw, 2rem);
   position: relative;
   display: inline-block;
+  scroll-margin-top: 100px;
 }
 
 h2::after {
@@ -87,6 +88,13 @@ a:hover {
   transform: translateY(-2px);
 }
 
+.btn:focus,
+.addButton:focus,
+.floatingCartButton:focus {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
 .text-center {
   text-align: center;
 }
@@ -98,3 +106,12 @@ a:hover {
 .mt-40 {
   margin-top: 40px;
 }
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+} 

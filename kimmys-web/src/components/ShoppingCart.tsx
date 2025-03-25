@@ -1,9 +1,9 @@
-// components/ShoppingCart.tsx
 'use client';
 
 import { useShoppingCart } from '@/context/ShoppingCartContext';
 import { urlFor } from '@/lib/sanity';
 import styles from './ShoppingCart.module.css';
+import Image from 'next/image'; // Added Image component
 
 export default function ShoppingCart() {
   const {
@@ -53,12 +53,13 @@ export default function ShoppingCart() {
                 <li key={item._id} className={styles.cartItem}>
                   {imageUrl && (
                     <div className={styles.itemImage}>
-                      <img 
+                      <Image 
                         src={imageUrl} 
                         alt={item.name}
                         width={80}
                         height={80}
                         loading="lazy"
+                        className={styles.cartImage}
                       />
                     </div>
                   )}

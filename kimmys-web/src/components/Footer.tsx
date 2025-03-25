@@ -1,4 +1,3 @@
-// components/Footer.tsx
 import Link from 'next/link';
 import styles from './Footer.module.css';
 
@@ -10,7 +9,7 @@ export default function Footer() {
       <div className={styles.container}>
         <div className={styles.footerContent}>
           <div className={styles.footerSection}>
-            <h3 className={styles.footerHeading}>Kimmy's Fast Foods</h3>
+            <h3 className={styles.footerHeading}>Kimmy&apos;s Fast Foods</h3>
             <p className={styles.footerText}>Delicious meals made with love since 2010</p>
           </div>
           
@@ -26,7 +25,6 @@ export default function Footer() {
               ))}
             </ul>
           </div>
-          
            
           <div className={styles.footerSection}>
             <h3 className={styles.footerHeading}>Where To Find Us</h3>
@@ -37,12 +35,9 @@ export default function Footer() {
         </div>
         
         <div className={styles.copyright}>
-          &copy; {currentYear} Kimmy's. All rights reserved.
+          &copy; {currentYear} Kimmy&apos;s. All rights reserved.
         </div>
       </div>
     </footer>
   );
 }
-
-
-

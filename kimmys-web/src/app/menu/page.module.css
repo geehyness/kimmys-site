@@ -1,0 +1,87 @@
+.hero {
+    padding: 6rem 0;
+    background: 
+      linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
+      url('/images/menu-bg.jpg') center/cover no-repeat;
+    color: white;
+    text-align: center;
+    margin-bottom: 3rem;
+    min-height: 60vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: fadeIn 0.8s ease-out;
+  }
+  
+  .categoryFilters {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin: 2rem 0 3rem;
+  }
+  
+  .filterButton {
+    padding: 0.5rem 1.25rem;
+    border-radius: 50px;
+    background: var(--secondary);
+    border: 1px solid var(--neutral);
+    color: var(--dark);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 0.9rem;
+    white-space: nowrap;
+  }
+  
+  .filterButton:hover {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+    transform: translateY(-2px);
+  }
+  
+  .filterButton.active {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+    font-weight: 500;
+    box-shadow: 0 2px 8px rgba(230, 57, 70, 0.3);
+  }
+  
+  .mealsSection {
+    padding: 3rem 0;
+  }
+  
+  .mealsGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+    animation: fadeIn 0.5s ease-out;
+  }
+  
+  .noItems {
+    text-align: center;
+    grid-column: 1 / -1;
+    padding: 3rem;
+    color: var(--neutral);
+    font-size: 1.1rem;
+    background: var(--secondary);
+    border-radius: 8px;
+  }
+  
+  /* Animations */
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  
+  @media (max-width: 768px) {
+    .hero {
+      padding: 4rem 0;
+    }
+    
+    .mealsGrid {
+      grid-template-columns: 1fr;
+    }
+  }

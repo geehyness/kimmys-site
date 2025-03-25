@@ -1,10 +1,15 @@
-// src/app/specials/page.tsx
 import { client } from '@/lib/sanity';
-import Layout from '@/components/Layout';
-import styles from '../page.module.css'; // Reuse styles from homepage
-import MealCard from '@/components/MealCard'; // Import the MealCard component
+import styles from '../page.module.css';
+import MealCard from '@/components/MealCard';
+import { Meal } from '@/types/meal';
 
-async function getData() {
+interface Special {
+  _id: string;
+  title: string;
+  meal?: Meal;
+}
+
+async function getData(): Promise<Special[]> {  // Corrected to return array of Specials
   const query = `*[_type == "special" && isActive == true] {
     _id,
     title,
@@ -22,11 +27,11 @@ async function getData() {
     }
   }`;
   try {
-    const data = await client.fetch(query);
-    return data;
+    const data = await client.fetch<Special[]>(query);  // Corrected to expect array
+    return data || [];  // Ensure we always return an array
   } catch (error) {
     console.error("Error fetching specials data from Sanity:", error);
-    return;
+    return [];  // Return empty array on error
   }
 }
 
@@ -34,19 +39,17 @@ export default async function SpecialsPage() {
   const specials = await getData();
 
   return (
-    <Layout>
-      <div className={styles.container}>
-        <h1>Today's Specials</h1>
-        {specials && specials.length > 0 ? (
-          <div className={styles.mealsGrid}>
-            {specials.map((special) => (
-              <MealCard key={special.meal?._id} meal={special.meal} />
-            ))}
-          </div>
-        ) : (
-          <p>No specials today. Check back tomorrow!</p>
-        )}
-      </div>
-    </Layout>
+    <div className={styles.container}>
+      <h1>Today&apos;s Specials</h1>
+      {specials.length > 0 ? (  // Simplified check since we always get an array
+        <div className={styles.mealsGrid}>
+          {specials.map((special) => (
+            special.meal && <MealCard key={special.meal._id} meal={special.meal} />
+          ))}
+        </div>
+      ) : (
+        <p>No specials today. Check back tomorrow!</p>
+      )}
+    </div>
   );
 }
