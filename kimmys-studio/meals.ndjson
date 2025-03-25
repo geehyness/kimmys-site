@@ -1,0 +1,15 @@
+{"_type":"meal","name":"Chips (Regular)","description":"Golden crispy fried potato chips","price":14,"category":"snack","isAvailable":true}
+{"_type":"meal","name":"Chips (Large)","description":"Extra portion of golden crispy chips","price":25,"category":"snack","isAvailable":true}
+{"_type":"meal","name":"Kota (Quarter)","description":"1/4 loaf bread with chips, russian, cheese and atchar","price":20,"category":"fastfood","isAvailable":true}
+{"_type":"meal","name":"Kota (Half)","description":"1/2 loaf bread with chips, russian, polony, egg and atchar","price":30,"category":"fastfood","isAvailable":true}
+{"_type":"meal","name":"Russian Roll","description":"Hot dog roll with russian sausage and sauce","price":25,"category":"fastfood","isAvailable":true}
+{"_type":"meal","name":"Quarter Chicken","description":"1/4 chicken with peri-peri or lemon & herb","price":40,"category":"fastfood","isAvailable":true}
+{"_type":"meal","name":"Half Chicken","description":"1/2 chicken with your choice of sauce","price":65,"category":"fastfood","isAvailable":true}
+{"_type":"meal","name":"Chicken Livers","description":"Spicy fried chicken livers with gravy","price":25,"category":"fastfood","isAvailable":true}
+{"_type":"meal","name":"Pau","description":"French loaf with chips, russian and salad","price":22,"category":"fastfood","isAvailable":true}
+{"_type":"meal","name":"Gatsby (Large)","description":"French loaf with steak, chips and salad","price":35,"category":"fastfood","isAvailable":true}
+{"_type":"meal","name":"Burger (Cheese)","description":"Beef patty with cheese, lettuce and sauce","price":45,"category":"fastfood","isAvailable":true}
+{"_type":"meal","name":"Burger (Bacon)","description":"Beef patty with bacon and cheese","price":55,"category":"fastfood","isAvailable":true}
+{"_type":"meal","name":"Coke (330ml)","description":"Cold Coca-Cola","price":15,"category":"drink","isAvailable":true}
+{"_type":"meal","name":"Fanta (330ml)","description":"Cold Fanta Orange","price":15,"category":"drink","isAvailable":true}
+{"_type":"meal","name":"Water (500ml)","description":"Bottled still water","price":12,"category":"drink","isAvailable":true}

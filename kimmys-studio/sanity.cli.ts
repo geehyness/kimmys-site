@@ -5,10 +5,9 @@ export default defineCliConfig({
     projectId: 'lma2ysa6',
     dataset: 'production'
   },
-  studioHost: 'kimmys', // Add this at the root level
+  /**
+   * Enable auto-updates for studios.
+   * Learn more at https://www.sanity.io/docs/cli#auto-updates
+   */
   autoUpdates: true,
-  server: {
-    hostname: 'localhost',
-    port: 3333
-  }
 })
