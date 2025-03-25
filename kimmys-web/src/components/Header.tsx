@@ -1,23 +1,58 @@
 'use client';
 
 import Link from 'next/link';
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useShoppingCart } from '@/context/ShoppingCartContext';
 import styles from './Header.module.css';
 
+const NAV_ITEMS = [
+  { path: '/', name: 'Home' },
+  { path: '/menu', name: 'Menu' },
+  { path: '/specials', name: 'Specials' },
+  { path: '/about', name: 'About' },
+  { path: '/contact', name: 'Contact' }
+];
+
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const { getTotalItems, toggleCart, closeCart } = useShoppingCart();
-
-  const handleToggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen);
-    closeCart();
-  };
+  const { getTotalItems, toggleCart, closeCart, isCartOpen } = useShoppingCart();
+  const mobileMenuRef = useRef(null);
 
   const closeAll = () => {
     closeCart();
     setIsMenuOpen(false);
   };
+
+  const handleToggleCart = () => {
+    toggleCart();
+    setIsMenuOpen(false);
+  };
+
+  // Close menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (mobileMenuRef.current && !mobileMenuRef.current.contains(event.target)) {
+        setIsMenuOpen(false);
+      }
+    };
+
+    // Close menu on escape key
+    const handleEscape = (event) => {
+      if (event.key === 'Escape') {
+        setIsMenuOpen(false);
+      }
+    };
+
+    if (isMenuOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+      document.addEventListener('keydown', handleEscape);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('keydown', handleEscape);
+    };
+  }, [isMenuOpen]);
 
   return (
     <header className={styles.header}>
@@ -30,13 +65,7 @@ export default function Header() {
         
         <nav className={styles.desktopNav}>
           <ul className={styles.navList}>
-            {[
-              { path: '/', name: 'Home' },
-              { path: '/menu', name: 'Menu' },
-              { path: '/specials', name: 'Specials' },
-              { path: '/about', name: 'About' },
-              { path: '/contact', name: 'Contact' }
-            ].map((item) => (
+            {NAV_ITEMS.map((item) => (
               <li key={item.path} className={styles.navItem}>
                 <Link 
                   href={item.path} 
@@ -50,8 +79,9 @@ export default function Header() {
             <li className={styles.navItem}>
               <button 
                 className={styles.cartButton}
-                onClick={toggleCart}
+                onClick={handleToggleCart}
                 aria-label={`Cart (${getTotalItems()} items)`}
+                aria-expanded={isCartOpen}
               >
                 🛒 {getTotalItems() > 0 && <span>{getTotalItems()}</span>}
               </button>
@@ -59,50 +89,40 @@ export default function Header() {
           </ul>
         </nav>
 
-        <div className={styles.mobileNav}>
+        <div className={styles.mobileNav} ref={mobileMenuRef}>
           <button 
             className={`${styles.menuButton} ${isMenuOpen ? styles.open : ''}`}
-            onClick={handleToggleMenu}
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
             aria-label="Toggle menu"
             aria-expanded={isMenuOpen}
           >
             <span className={styles.hamburger}></span>
           </button>
           
-          {isMenuOpen && (
-            <div className={styles.mobileMenu}>
-              <ul className={styles.navList}>
-                {[
-                  { path: '/', name: 'Home' },
-                  { path: '/menu', name: 'Menu' },
-                  { path: '/specials', name: 'Specials' },
-                  { path: '/about', name: 'About' },
-                  { path: '/contact', name: 'Contact' }
-                ].map((item) => (
-                  <li key={item.path} className={styles.navItem}>
-                    <Link 
-                      href={item.path} 
-                      className={styles.navLink} 
-                      onClick={closeAll}
-                    >
-                      {item.name}
-                    </Link>
-                  </li>
-                ))}
-                <li className={styles.navItem}>
-                  <button 
-                    className={styles.cartButton}
-                    onClick={() => {
-                      toggleCart();
-                      setIsMenuOpen(false);
-                    }}
+          <div className={`${styles.mobileMenu} ${isMenuOpen ? styles.open : ''}`}>
+            <ul className={styles.navList}>
+              {NAV_ITEMS.map((item) => (
+                <li key={item.path} className={styles.navItem}>
+                  <Link 
+                    href={item.path} 
+                    className={styles.navLink} 
+                    onClick={closeAll}
                   >
-                    🛒 Cart ({getTotalItems()})
-                  </button>
+                    {item.name}
+                  </Link>
                 </li>
-              </ul>
-            </div>
-          )}
+              ))}
+              <li className={styles.navItem}>
+                <button 
+                  className={styles.cartButton}
+                  onClick={handleToggleCart}
+                  aria-label={`Cart (${getTotalItems()} items)`}
+                >
+                  🛒 Cart ({getTotalItems()})
+                </button>
+              </li>
+            </ul>
+          </div>
         </div>
       </div>
     </header>

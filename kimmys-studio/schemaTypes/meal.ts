@@ -4,6 +4,7 @@ export default defineType({
   name: 'meal',
   title: 'Meal',
   type: 'document',
+  icon: () => '🍔',
   fields: [
     defineField({
       name: 'name',
@@ -31,16 +32,9 @@ export default defineType({
     defineField({
       name: 'category',
       title: 'Category',
-      type: 'string',
-      options: {
-        list: [
-          {title: 'Breakfast', value: 'breakfast'},
-          {title: 'Lunch', value: 'lunch'},
-          {title: 'Dinner', value: 'dinner'},
-          {title: 'Snack', value: 'snack'},
-          {title: 'Drink', value: 'drink'}
-        ]
-      }
+      type: 'reference',
+      to: [{ type: 'category' }],
+      validation: (Rule) => Rule.required()
     }),
     defineField({
       name: 'isAvailable',
@@ -50,4 +44,3 @@ export default defineType({
     })
   ]
 })
-

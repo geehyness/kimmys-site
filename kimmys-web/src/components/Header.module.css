@@ -1,6 +1,6 @@
 /* components/Header.module.css */
 .header {
-  background-color: #6c757d; /* Gray background */
+  background-color: #6c757d;
   color: white;
   padding: 1rem 0;
   position: sticky;
@@ -16,6 +16,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  position: relative;
 }
 
 .logo {
@@ -34,6 +35,11 @@
   color: #f8f9fa;
   font-size: 0.8rem;
   margin-left: 0.5rem;
+}
+
+/* Desktop Navigation */
+.desktopNav {
+  display: block;
 }
 
 .navList {
@@ -84,6 +90,7 @@
   align-items: center;
   gap: 0.5rem;
   transition: background 0.3s ease;
+  position: relative;
 }
 
 .cartButton:hover {
@@ -103,6 +110,7 @@
   font-weight: bold;
 }
 
+/* Mobile Navigation */
 .mobileNav {
   display: none;
 }
@@ -113,6 +121,12 @@
   cursor: pointer;
   padding: 0.5rem;
   z-index: 1001;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 30px;
+  height: 30px;
 }
 
 .hamburger {
@@ -121,6 +135,7 @@
   height: 2px;
   background: white;
   position: relative;
+  transition: transform 0.3s ease, opacity 0.3s ease;
 }
 
 .hamburger::before,
@@ -131,25 +146,39 @@
   height: 2px;
   background: white;
   left: 0;
+  transition: transform 0.3s ease;
 }
 
 .hamburger::before {
   top: -6px;
+  transform-origin: center;
 }
 
 .hamburger::after {
   bottom: -6px;
+  transform-origin: center;
 }
 
+/* Mobile Menu */
 .mobileMenu {
   position: fixed;
-  top: 70px;
+  top: 70px; /* Should match header height */
   left: 0;
   right: 0;
   background: #6c757d;
   padding: 1rem;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  z-index: 999;
+  z-index: 1000;
+  transform: translateY(-100%);
+  opacity: 0;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.mobileMenu.open {
+  transform: translateY(0);
+  opacity: 1;
+  pointer-events: auto;
 }
 
 .mobileMenu .navList {
@@ -158,6 +187,20 @@
   gap: 1rem;
 }
 
+/* Active states */
+.menuButton.open .hamburger {
+  transform: rotate(45deg);
+}
+
+.menuButton.open .hamburger::before {
+  transform: rotate(90deg) translate(6px, 0);
+}
+
+.menuButton.open .hamburger::after {
+  transform: rotate(-90deg) translate(6px, 0);
+}
+
+/* Responsive */
 @media (max-width: 768px) {
   .desktopNav {
     display: none;
