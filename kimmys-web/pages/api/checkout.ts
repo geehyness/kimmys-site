@@ -73,7 +73,7 @@ export default async function handler(
     // Handle file upload if exists
     let paymentProofUrl = null;
     if (files.paymentProof) {
-      const file = files.paymentProof as formidable.File;
+      const file = files.paymentProof as unknown as formidable.File;
       const uploadDir = './public/uploads';
       
       if (!fs.existsSync(uploadDir)) {
