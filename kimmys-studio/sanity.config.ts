@@ -25,6 +25,7 @@ export default defineConfig({
                   .items([
                     S.documentTypeListItem('meal'),
                     S.documentTypeListItem('combo'),
+                    S.documentTypeListItem('category'), // Add this line here
                   ])
               ),
 

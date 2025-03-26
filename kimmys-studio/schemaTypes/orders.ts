@@ -6,6 +6,12 @@ export default defineType({
   type: 'document',
   fields: [
     defineField({
+      name: 'orderNumber',
+      title: 'Order Number',
+      type: 'string',
+      readOnly: true,
+    }),
+    defineField({
       name: 'customer',
       title: 'Customer Information',
       type: 'object',
@@ -14,7 +20,6 @@ export default defineType({
           name: 'name',
           title: 'Full Name',
           type: 'string',
-          validation: (Rule) => Rule.required()
         }),
         defineField({
           name: 'phone',
@@ -26,6 +31,11 @@ export default defineType({
           name: 'email',
           title: 'Email',
           type: 'string'
+        }),
+        defineField({
+          name: 'whatsapp',
+          title: 'WhatsApp Number',
+          type: 'string',
         })
       ]
     }),
@@ -57,6 +67,13 @@ export default defineType({
               type: 'number',
               description: 'Price at time of ordering',
               validation: (Rule) => Rule.required().positive()
+            }),
+            defineField({
+              name: 'nameAtPurchase',
+              title: 'Name at Purchase',
+              type: 'string',
+              description: 'Name of the product at the time of ordering',
+              readOnly: true,
             })
           ]
         }
@@ -130,6 +147,12 @@ export default defineType({
       name: 'estimatedReady',
       title: 'Estimated Ready Time',
       type: 'datetime'
+    }),
+    defineField({
+      name: 'paymentProof',
+      title: 'Payment Proof Filename',
+      type: 'string',
+      description: 'Filename of the payment proof (if applicable)',
     })
   ],
   initialValue: {
@@ -141,17 +164,18 @@ export default defineType({
       items: 'items.length',
       total: 'totalAmount',
       status: 'status',
-      payment: 'paymentMethod'
+      payment: 'paymentMethod',
+      orderNumber: 'orderNumber',
     },
     prepare(selection) {
-      const { customer, items, total, status, payment } = selection
+      const { customer, items, total, status, payment, orderNumber } = selection
       const paymentMethods = {
         ewallet: 'eWallet',
         momo: 'MoMo',
-        cash: 'Cash'
+        cash: 'Cash on Collection'
       }
       return {
-        title: `${customer}'s Order`,
+        title: `${customer}'s Order (${orderNumber})`,
         subtitle: `${items} item(s) • R${total} • ${status} • ${paymentMethods[payment as keyof typeof paymentMethods] || payment}`
       }
     }
