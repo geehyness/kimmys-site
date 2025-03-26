@@ -46,7 +46,9 @@ export default function ShoppingCart() {
   };
 
   const handlePhoneNumberChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setCustomerPhoneNumber(event.target.value);
+    // Remove empty spaces from the input value
+    const valueWithoutSpaces = event.target.value.replace(/\s/g, '');
+    setCustomerPhoneNumber(valueWithoutSpaces);
     setPhoneNumberError('');
   };
 
