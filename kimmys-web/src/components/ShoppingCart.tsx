@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, ChangeEvent } from 'react';
+import { useState, ChangeEvent, useEffect } from 'react';
 import { useShoppingCart } from '@/context/ShoppingCartContext';
 import styles from './ShoppingCart.module.css';
 import Image from 'next/image';
@@ -29,6 +29,18 @@ export default function ShoppingCart() {
   const [customerName, setCustomerName] = useState('');
   const [customerEmail, setCustomerEmail] = useState('');
   const [isContactCollapsed, setIsContactCollapsed] = useState(true);
+
+  useEffect(() => {
+    if (isCartOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'auto';
+    }
+
+    return () => {
+      document.body.style.overflow = 'auto';
+    };
+  }, [isCartOpen]);
 
   const handlePaymentMethodChange = (event: ChangeEvent<HTMLSelectElement>) => {
     setSelectedPaymentMethod(event.target.value);
