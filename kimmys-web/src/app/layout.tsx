@@ -1,12 +1,12 @@
-import type { Metadata } from 'next';
+import '@/app/globals.css';
 import { Inter } from 'next/font/google';
-import './globals.css';
 import { ShoppingCartProvider } from '@/context/ShoppingCartContext';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import styles from '@/components/Layout.module.css';
 import ShoppingCart from '@/components/ShoppingCart';
 import FloatingCartButton from '@/components/FloatingCartButton';
+import type { Metadata } from 'next';
 
 const inter = Inter({ subsets: ['latin'] });
 

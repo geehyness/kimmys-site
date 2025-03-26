@@ -1,0 +1,55 @@
+.floatingCartButton {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background-color: #e63946;
+    color: white;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    z-index: 900;
+    transition: all 0.3s ease;
+  }
+  
+  .floatingCartButton:hover {
+    background-color: #c1121f;
+    transform: scale(1.05);
+  }
+  
+  .cartIcon {
+    font-size: 1.5rem;
+    position: relative;
+  }
+  
+  .cartBadge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background-color: white;
+    color: #e63946;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    font-weight: bold;
+    border: 2px solid #e63946;
+  }
+  
+  /* Responsive styles */
+  @media (max-width: 768px) {
+    .floatingCartButton {
+      bottom: 1.5rem;
+      right: 1.5rem;
+      width: 56px;
+      height: 56px;
+    }
+  }

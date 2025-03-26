@@ -1,7 +1,7 @@
 'use client';
 
 import { useShoppingCart } from '@/context/ShoppingCartContext';
-import styles from './Layout.module.css';
+import styles from './FloatingCartButton.module.css';
 
 export default function FloatingCartButton() {
   const { toggleCart, getTotalItems } = useShoppingCart();

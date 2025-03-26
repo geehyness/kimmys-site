@@ -1,9 +1,11 @@
-// components/ShoppingCart.tsx
 'use client';
 
 import { useState, ChangeEvent } from 'react';
 import { useShoppingCart } from '@/context/ShoppingCartContext';
 import styles from './ShoppingCart.module.css';
+import Image from 'next/image';
+import { urlFor } from '@/lib/sanity';
+//import { Meal } from '@/types/meal';
 
 export default function ShoppingCart() {
   const {
@@ -14,7 +16,7 @@ export default function ShoppingCart() {
     getTotalItems,
     getCartTotal,
     closeCart,
-    isCartOpen
+    isCartOpen,
   } = useShoppingCart();
 
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState('');
@@ -23,13 +25,14 @@ export default function ShoppingCart() {
   const [customerPhoneNumber, setCustomerPhoneNumber] = useState('');
   const [whatsappNumber, setWhatsappNumber] = useState('');
   const [phoneNumberError, setPhoneNumberError] = useState('');
-  const [isSubmitting, setIsSubmitting] = useState(false); // To disable button during submission
-  const [customerName, setCustomerName] = useState(''); // Add state for customer name
-  const [customerEmail, setCustomerEmail] = useState(''); // Add state for customer email
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [customerName, setCustomerName] = useState('');
+  const [customerEmail, setCustomerEmail] = useState('');
+  const [isContactCollapsed, setIsContactCollapsed] = useState(true);
 
   const handlePaymentMethodChange = (event: ChangeEvent<HTMLSelectElement>) => {
     setSelectedPaymentMethod(event.target.value);
-    setPaymentProof(null); // Reset proof on payment method change
+    setPaymentProof(null);
     setCheckoutError('');
   };
 
@@ -64,6 +67,10 @@ export default function ShoppingCart() {
     return swaziRegex.test(number);
   };
 
+  const toggleContactSection = () => {
+    setIsContactCollapsed(!isContactCollapsed);
+  };
+
   const handleCheckout = async () => {
     if (cartItems.length === 0) {
       setCheckoutError('Your cart is empty.');
@@ -91,48 +98,44 @@ export default function ShoppingCart() {
     }
 
     setIsSubmitting(true);
-    setCheckoutError(''); // Clear any previous errors
+    setCheckoutError('');
 
-    const orderData = {
+    const formData = new FormData();
+    formData.append('orderData', JSON.stringify({
       cartItems,
       total: getCartTotal(),
       paymentMethod: selectedPaymentMethod,
-      paymentProof: paymentProof ? paymentProof.name : null,
       customerPhoneNumber,
       whatsappNumber: whatsappNumber || null,
       orderDate: new Date().toISOString(),
-      customerName: customerName, // Include customer name
-      customerEmail: customerEmail, // Include customer email
-    };
+      customerName,
+      customerEmail,
+    }));
 
-    console.log('Sending order data to backend:', orderData);
+    if (paymentProof) {
+      formData.append('paymentProof', paymentProof);
+    }
 
     try {
       const response = await fetch('/api/checkout', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(orderData),
+        body: formData,
       });
 
       if (response.ok) {
         const data = await response.json();
-        console.log('Order placed successfully:', data);
-        alert(`Order placed successfully! Your Order Number is: ${data.orderNumber}`); // Display order number
+        alert(`Order placed successfully! Your Order Number is: ${data.orderNumber}`);
         clearCart();
         closeCart();
-        // Optionally redirect the user or show a thank you message
       } else {
         const errorData = await response.json();
-        console.error('Error placing order:', errorData);
         setCheckoutError(errorData.error || 'Failed to place order. Please try again.');
       }
     } catch (error) {
-      console.error('There was an error submitting the order:', error);
       setCheckoutError('Failed to connect to the server. Please try again later.');
+      console.log("error", error)
     } finally {
-      setIsSubmitting(false); // Re-enable the button
+      setIsSubmitting(false);
     }
   };
 
@@ -140,9 +143,7 @@ export default function ShoppingCart() {
 
   return (
     <>
-      {isCartOpen && (
-        <div className={`${styles.overlayBackdrop} ${isCartOpen ? styles.open : ''}`} onClick={closeCart} />
-      )}
+      <div className={`${styles.overlayBackdrop} ${isCartOpen ? styles.open : ''}`} onClick={closeCart} />
       <div className={`${styles.cartOverlay} ${isCartOpen ? styles.open : ''}`}>
         <div className={styles.cartContainer}>
           <div className={styles.cartHeader}>
@@ -171,9 +172,20 @@ export default function ShoppingCart() {
               <ul className={styles.cartItems}>
                 {cartItems.map((item) => (
                   <li key={item._id} className={styles.cartItem}>
+                    <div className={styles.itemImage}>
+                      {item.image?.asset?.url && (
+                        <Image
+                          src={urlFor(item.image).url()}
+                          alt={item.name}
+                          width={80}
+                          height={80}
+                          className={styles.cartImage}
+                        />
+                      )}
+                    </div>
                     <div className={styles.itemDetails}>
                       <h3>{item.name}</h3>
-                      <p>${item.price.toFixed(2)}</p>
+                      <p>R{item.price.toFixed(2)}</p>
                       <div className={styles.quantityControls}>
                         <button
                           onClick={() => updateQuantity(item._id, item.quantity - 1)}
@@ -202,83 +214,127 @@ export default function ShoppingCart() {
               <div className={styles.cartFooter}>
                 <div className={styles.total}>
                   <span>Total:</span>
-                  <span>${getCartTotal().toFixed(2)}</span>
+                  <span>R{getCartTotal().toFixed(2)}</span>
                 </div>
 
-                {/* Contact Information */}
-                <div className={styles.contactInfo}>
-                  <h3>Contact Information</h3>
+                <div className={styles.formSection}>
                   <div className={styles.inputGroup}>
-                    <label htmlFor="name">Full Name (Optional)</label>
-                    <input
-                      type="text"
-                      id="name"
-                      value={customerName}
-                      onChange={handleNameChange}
-                      placeholder="Your Full Name"
-                    />
-                  </div>
-                  <div className={styles.inputGroup}>
-                    <label htmlFor="phoneNumber">Phone Number (Swazi)</label>
+                    <label htmlFor="phoneNumber">Phone Number*</label>
                     <input
                       type="tel"
                       id="phoneNumber"
                       value={customerPhoneNumber}
                       onChange={handlePhoneNumberChange}
-                      placeholder="e.g., 76xxxxxx"
+                      placeholder="e.g., 76xxxxxx or 78xxxxxx"
+                      required
                     />
                     {phoneNumberError && <p className={styles.error}>{phoneNumberError}</p>}
                   </div>
-                  <div className={styles.inputGroup}>
-                    <label htmlFor="whatsappNumber">WhatsApp Number (Optional)</label>
-                    <input
-                      type="tel"
-                      id="whatsappNumber"
-                      value={whatsappNumber}
-                      onChange={handleWhatsappNumberChange}
-                      placeholder="If different from Swazi number"
-                    />
+                </div>
+
+                <div className={`${styles.formSection} ${styles.collapsible} ${!isContactCollapsed ? styles.open : ''}`}>
+                  <div className={styles.sectionHeader} onClick={toggleContactSection}>
+                    <h3>Additional Information</h3>
+                    <svg
+                      className={styles.chevron}
+                      width="20"
+                      height="20"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <polyline points="6 9 12 15 18 9"></polyline>
+                    </svg>
                   </div>
-                  <div className={styles.inputGroup}>
-                    <label htmlFor="email">Email Address (Optional)</label>
-                    <input
-                      type="email"
-                      id="email"
-                      value={customerEmail}
-                      onChange={handleEmailChange}
-                      placeholder="Your Email Address"
-                    />
+                  <div className={styles.sectionContent}>
+                    <div className={styles.inputGroup}>
+                      <label htmlFor="name">Full Name</label>
+                      <input
+                        type="text"
+                        id="name"
+                        value={customerName}
+                        onChange={handleNameChange}
+                        placeholder="Your full name"
+                      />
+                    </div>
+                    <div className={styles.inputGroup}>
+                      <label htmlFor="whatsappNumber">WhatsApp Number</label>
+                      <input
+                        type="tel"
+                        id="whatsappNumber"
+                        value={whatsappNumber}
+                        onChange={handleWhatsappNumberChange}
+                        placeholder="If different from phone number"
+                      />
+                    </div>
+                    <div className={styles.inputGroup}>
+                      <label htmlFor="email">Email</label>
+                      <input
+                        type="email"
+                        id="email"
+                        value={customerEmail}
+                        onChange={handleEmailChange}
+                        placeholder="your@email.com"
+                      />
+                    </div>
                   </div>
                 </div>
 
-                {/* Payment Method Selection */}
-                <div className={styles.paymentOptions}>
+                <div className={styles.formSection}>
                   <h3>Payment Method</h3>
-                  <select value={selectedPaymentMethod} onChange={handlePaymentMethodChange}>
-                    <option value="">Select Payment Method</option>
-                    <option value="eWallet">eWallet</option>
-                    <option value="MoMo">MoMo</option>
-                    <option value="Cash on Collect">Cash on Collect</option>
-                  </select>
+                  <div className={styles.inputGroup}>
+                    <select
+                      value={selectedPaymentMethod}
+                      onChange={handlePaymentMethodChange}
+                    >
+                      <option value="">Select Payment Method</option>
+                      <option value="eWallet">eWallet</option>
+                      <option value="MoMo">MoMo</option>
+                      <option value="Cash on Collect">Cash on Collect</option>
+                    </select>
+                  </div>
+
+                  {['eWallet', 'MoMo'].includes(selectedPaymentMethod) && (
+                    <div className={styles.inputGroup}>
+                      <label htmlFor="paymentProof" className={styles.fileInputLabel}>
+                        Upload Proof of Payment
+                        <input
+                          type="file"
+                          id="paymentProof"
+                          className={styles.fileInput}
+                          accept="image/*"
+                          onChange={handlePaymentProofChange}
+                        />
+                      </label>
+                      {paymentProof && (
+                        <p className={styles.fileName}>{paymentProof.name}</p>
+                      )}
+                    </div>
+                  )}
                 </div>
 
-                {/* Proof of Payment Upload (Conditional) */}
-                {['eWallet', 'MoMo'].includes(selectedPaymentMethod) && (
-                  <div className={styles.paymentProof}>
-                    <h3>Proof of Payment</h3>
-                    <input type="file" accept="image/*" onChange={handlePaymentProofChange} />
-                    {paymentProof && <p>Selected file: {paymentProof.name}</p>}
+                {checkoutError && (
+                  <div className={styles.error} style={{ margin: '1rem 0' }}>
+                    {checkoutError}
                   </div>
                 )}
 
-                {checkoutError && <p className={styles.error}>{checkoutError}</p>}
-
                 <div className={styles.actions}>
-                  <button onClick={clearCart} className={styles.clearButton}>
+                  <button
+                    onClick={clearCart}
+                    className={styles.clearButton}
+                  >
                     Clear Cart
                   </button>
-                  <button onClick={handleCheckout} className={styles.checkoutButton} disabled={isSubmitting}>
-                    {isSubmitting ? 'Processing...' : 'Checkout'}
+                  <button
+                    onClick={handleCheckout}
+                    className={styles.checkoutButton}
+                    disabled={isSubmitting}
+                  >
+                    {isSubmitting ? 'Processing...' : 'Place Order'}
                   </button>
                 </div>
               </div>
