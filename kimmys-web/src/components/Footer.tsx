@@ -1,5 +1,7 @@
 // components/Footer.tsx
+
 import Link from 'next/link';
+import Image from 'next/image';
 import styles from './Footer.module.css';
 
 export default function Footer() {
@@ -42,6 +44,20 @@ export default function Footer() {
 
         <div className={styles.copyright}>
           &copy; {currentYear} Kimmy&apos;s. All rights reserved.
+        </div>
+      </div>
+
+      {/* New section with image */}
+      <div className={styles.underFooter}>
+        <div className={styles.underFooterLine}>by</div>
+        <div className={styles.imageContainer}>
+          <Image 
+            src="image.png" // Update this path
+            alt="Company logo or attribution"
+            width={100} // Adjust as needed
+            height={40} // Adjust as needed
+            className={styles.footerImage}
+          />
         </div>
       </div>
     </footer>
