@@ -59,3 +59,22 @@
   opacity: 0.7;
   font-size: 0.9rem;
 }
+
+/* Add these styles to your CSS module */
+.underFooter {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px; /* Adjust spacing between text and image */
+}
+
+.imageContainer {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.footerImage {
+  /* Additional image styling if needed */
+}
