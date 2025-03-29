@@ -52,7 +52,7 @@ export default function Footer() {
         <div className={styles.underFooterLine}>by</div>
         <div className={styles.imageContainer}>
           <Image 
-            src="/images/hd.png" // Updated path to public image
+            src="/images/hd-blank.png" // Updated path to public image
             alt="Company logo or attribution"
             width={100} // Adjust as needed
             height={40} // Adjust as needed
