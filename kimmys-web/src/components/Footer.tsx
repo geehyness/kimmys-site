@@ -49,13 +49,15 @@ export default function Footer() {
 
       {/* New section with image */}
       <div className={styles.underFooter}>
+        <br></br>
+        <br></br>
         <div className={styles.underFooterLine}>by</div>
         <div className={styles.imageContainer}>
           <Image 
             src="/images/hd-blank.png" // Updated path to public image
             alt="Company logo or attribution"
-            width={80} // Adjust as needed
-            height={80} // Adjust as needed
+            width={100} // Adjust as needed
+            height={100} // Adjust as needed
             className={styles.footerImage}
           />
         </div>
