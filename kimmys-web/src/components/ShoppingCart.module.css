@@ -1,5 +1,72 @@
 /* (Same CSS as provided previously) */
 /* Cart Overlay */
+
+/* Add these new styles to your existing CSS */
+.extrasGrid {
+  width: 100%;
+  margin-top: 1rem;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  overflow: hidden;
+}
+
+.extrasHeader {
+  display: grid;
+  grid-template-columns: 1fr repeat(auto-fit, minmax(40px, 1fr));
+  background: var(--bg-secondary);
+  padding: 0.5rem;
+  font-weight: bold;
+  gap: 0.5rem;
+}
+
+.extraRow {
+  display: grid;
+  grid-template-columns: 1fr repeat(auto-fit, minmax(40px, 1fr));
+  padding: 0.5rem;
+  border-top: 1px solid var(--border-color);
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.extraName {
+  font-size: 0.9rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.extraCheckbox {
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.extraCheckbox.selected {
+  background-color: var(--primary);
+  color: white;
+  border-color: var(--primary);
+}
+
+.basePrice {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  margin-bottom: 0.5rem;
+}
+
+.itemTotal {
+  font-weight: bold;
+  min-width: 80px;
+  text-align: right;
+  margin-left: 1rem;
+}
+
+/* Keep all your existing styles below this point */
+
 .cartOverlay {
   position: fixed;
   top: 1rem;
@@ -387,4 +454,326 @@
 
 .collapsible.open .chevron {
   transform: rotate(180deg);
+}
+
+/* Add these styles to your existing CSS */
+.extrasGrid {
+  width: 100%;
+  margin-top: 1rem;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  overflow: hidden;
+}
+
+.extrasHeader {
+  display: grid;
+  grid-template-columns: 1fr repeat(auto-fit, minmax(40px, 1fr));
+  background: var(--bg-secondary);
+  padding: 0.5rem;
+  font-weight: bold;
+  gap: 0.5rem;
+}
+
+.extraRow {
+  display: grid;
+  grid-template-columns: 1fr repeat(auto-fit, minmax(40px, 1fr));
+  padding: 0.5rem;
+  border-top: 1px solid var(--border-color);
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.extraName {
+  font-size: 0.9rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.extraCheckbox {
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.extraCheckbox:hover {
+  background-color: var(--bg-secondary);
+}
+
+.extraCheckbox.selected {
+  background-color: var(--primary);
+  color: white;
+  border-color: var(--primary);
+}
+
+.basePrice {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  margin-bottom: 0.5rem;
+}
+
+.itemTotal {
+  font-weight: bold;
+  min-width: 80px;
+  text-align: right;
+  margin-left: 1rem;
+}
+
+
+.extrasGrid {
+  margin-top: 1rem;
+  width: 100%;
+  border: 1px solid #eee;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.extrasHeader {
+  display: grid;
+  grid-template-columns: 1fr repeat(auto-fit, minmax(30px, 1fr));
+  background: #f7f7f7;
+  padding: 0.5rem;
+  font-weight: bold;
+  border-bottom: 1px solid #ddd;
+}
+
+.quantityHeader {
+  text-align: center;
+  font-size: 0.8rem;
+}
+
+.extraRow {
+  display: grid;
+  grid-template-columns: 1fr repeat(auto-fit, minmax(30px, 1fr));
+  padding: 0.5rem;
+  align-items: center;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.extraRow:last-child {
+  border-bottom: none;
+}
+
+.extraName {
+  font-size: 0.85rem;
+}
+
+.extraCheckbox {
+  width: 24px;
+  height: 24px;
+  border: 2px solid #ddd;
+  border-radius: 4px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.extraCheckbox:hover {
+  border-color: #aaa;
+}
+
+.extraCheckbox.selected {
+  background: #4CAF50;
+  color: white;
+  border-color: #4CAF50;
+}
+
+/* Extras Grid Styles */
+.extrasGrid {
+  margin-top: 1rem;
+  width: 100%;
+  border: 1px solid #eee;
+  border-radius: 8px;
+  overflow-x: auto; /* Allows horizontal scrolling on mobile */
+  background: #f9f9f9;
+}
+
+.extrasHeader {
+  display: grid;
+  grid-template-columns: 120px repeat(auto-fit, minmax(40px, 1fr));
+  padding: 0.5rem;
+  font-weight: bold;
+  background: #f0f0f0;
+  position: sticky;
+  left: 0;
+}
+
+.quantityHeader {
+  text-align: center;
+  font-size: 0.8rem;
+  min-width: 40px;
+}
+
+.extraRow {
+  display: grid;
+  grid-template-columns: 120px repeat(auto-fit, minmax(40px, 1fr));
+  padding: 0.5rem;
+  align-items: center;
+  border-bottom: 1px solid #eee;
+  min-width: fit-content;
+}
+
+.extraRow:last-child {
+  border-bottom: none;
+}
+
+.extraName {
+  font-size: 0.85rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.extraCheckbox {
+  width: 24px;
+  height: 24px;
+  border: 2px solid #ddd;
+  border-radius: 4px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.extraCheckbox:hover {
+  border-color: #aaa;
+}
+
+.extraCheckbox.selected {
+  background: #4CAF50;
+  color: white;
+  border-color: #4CAF50;
+}
+
+/* Mobile-specific styles */
+@media (max-width: 768px) {
+  .extrasGrid {
+    display: block;
+    white-space: nowrap;
+  }
+
+  .extrasHeader {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .extraRow {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .quantityHeader,
+  .extraCheckbox {
+    min-width: 40px;
+    flex-shrink: 0;
+  }
+
+  .extraName {
+    min-width: 120px;
+    flex-shrink: 0;
+  }
+}
+/* Extras Grid Container */
+.extrasGrid {
+  margin-top: 1rem;
+  width: 100%;
+  border: 1px solid #eee;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #f9f9f9;
+}
+
+/* Grid Header */
+.extrasHeader {
+  display: grid;
+  grid-template-columns: minmax(150px, 1fr) repeat(auto-fit, minmax(40px, 1fr));
+  padding: 0.5rem;
+  font-weight: bold;
+  background: #f0f0f0;
+  align-items: center;
+}
+
+/* Extra Rows */
+.extraRow {
+  display: grid;
+  grid-template-columns: minmax(150px, 1fr) repeat(auto-fit, minmax(40px, 1fr));
+  padding: 0.5rem;
+  align-items: center;
+  border-bottom: 1px solid #eee;
+  min-height: 40px; /* Fixed row height */
+}
+
+/* Extra Name */
+.extraName {
+  font-size: 0.85rem;
+  padding-right: 0.5rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
+/* Quantity Headers */
+.quantityHeader {
+  text-align: center;
+  font-size: 0.8rem;
+}
+
+/* Checkbox Cells */
+.extraCheckboxContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+.extraCheckbox {
+  width: 24px;
+  height: 24px;
+  border: 2px solid #ddd;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.extraCheckbox.selected {
+  background: #4CAF50;
+  color: white;
+  border-color: #4CAF50;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+  .extrasGrid {
+    display: block;
+    overflow-x: auto;
+  }
+  
+  .extrasHeader,
+  .extraRow {
+    grid-template-columns: 150px repeat(4, 40px); /* Adjust based on max quantity */
+    min-width: fit-content;
+  }
+  
+  .extraName {
+    position: sticky;
+    left: 0;
+    background: white;
+    z-index: 1;
+  }
 }

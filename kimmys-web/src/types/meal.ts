@@ -8,6 +8,14 @@ export interface Category {
   };
 }
 
+export interface Extra {
+  _id: string;
+  _type: 'extra';
+  name: string;
+  price: number;
+  isAvailable?: boolean;
+}
+
 export interface Meal {
   _id: string;
   _type: 'meal';
@@ -15,18 +23,16 @@ export interface Meal {
   description?: string;
   price: number;
   isAvailable?: boolean;
-  category?:
-    | {
-        _id: string;
-        title: string;
-        slug: {
-          current: string;
-        };
-      }
-    | {
-        _ref: string;
-        _type: 'reference';
-      };
+  category?: {
+    _id: string;
+    title: string;
+    slug: {
+      current: string;
+    };
+  } | {
+    _ref: string;
+    _type: 'reference';
+  };
   image?: {
     asset?: {
       _id?: string;
@@ -35,8 +41,10 @@ export interface Meal {
       _type?: 'reference';
     };
   };
+  extras?: Extra[];
 }
 
-export interface MealCardProps {
-  meal: Meal;
+export interface CartItem extends Meal {
+  quantity: number;
+  selectedExtras: Extra[][];
 }

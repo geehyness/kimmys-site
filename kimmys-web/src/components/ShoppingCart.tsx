@@ -5,13 +5,14 @@ import { useShoppingCart } from '@/context/ShoppingCartContext';
 import styles from './ShoppingCart.module.css';
 import Image from 'next/image';
 import { urlFor } from '@/lib/sanity';
-//import { Meal } from '@/types/meal';
+import { CartItem, Extra } from '@/types/meal';
 
 export default function ShoppingCart() {
   const {
     cartItems,
     removeFromCart,
     updateQuantity,
+    updateExtraSelection,
     clearCart,
     getTotalItems,
     getCartTotal,
@@ -19,6 +20,14 @@ export default function ShoppingCart() {
     isCartOpen,
   } = useShoppingCart();
 
+  console.log('Cart items with extras:', cartItems.map(item => ({
+    name: item.name,
+    hasExtras: !!item.extras,
+    extrasCount: item.extras?.length || 0,
+    selectedExtras: item.selectedExtras
+  })));
+
+  // Checkout state
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState('');
   const [paymentProof, setPaymentProof] = useState<File | null>(null);
   const [checkoutError, setCheckoutError] = useState('');
@@ -36,18 +45,30 @@ export default function ShoppingCart() {
     } else {
       document.body.style.overflow = 'auto';
     }
-
     return () => {
       document.body.style.overflow = 'auto';
     };
   }, [isCartOpen]);
 
+  const calculateItemTotal = (item: CartItem) => {
+    const basePrice = item.price * item.quantity;
+    const extrasTotal = item.selectedExtras.reduce((sum, extras) => 
+      sum + extras.reduce((acc, extra) => acc + extra.price, 0), 0);
+    return basePrice + extrasTotal;
+  };
+
+  const isExtraSelected = (item: CartItem, quantityIndex: number, extra: Extra) => {
+    return item.selectedExtras[quantityIndex]?.some(e => e._id === extra._id) || false;
+  };
+
+  // Payment method handler
   const handlePaymentMethodChange = (event: ChangeEvent<HTMLSelectElement>) => {
     setSelectedPaymentMethod(event.target.value);
     setPaymentProof(null);
     setCheckoutError('');
   };
 
+  // Payment proof handler
   const handlePaymentProofChange = (event: ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files.length > 0) {
       setPaymentProof(event.target.files[0]);
@@ -57,34 +78,40 @@ export default function ShoppingCart() {
     }
   };
 
+  // Phone number handler
   const handlePhoneNumberChange = (event: ChangeEvent<HTMLInputElement>) => {
-    // Remove empty spaces from the input value
     const valueWithoutSpaces = event.target.value.replace(/\s/g, '');
     setCustomerPhoneNumber(valueWithoutSpaces);
     setPhoneNumberError('');
   };
 
+  // WhatsApp number handler
   const handleWhatsappNumberChange = (event: ChangeEvent<HTMLInputElement>) => {
     setWhatsappNumber(event.target.value);
   };
 
+  // Name handler
   const handleNameChange = (event: ChangeEvent<HTMLInputElement>) => {
     setCustomerName(event.target.value);
   };
 
+  // Email handler
   const handleEmailChange = (event: ChangeEvent<HTMLInputElement>) => {
     setCustomerEmail(event.target.value);
   };
 
+  // Phone validation
   const validateSwaziPhoneNumber = (number: string) => {
     const swaziRegex = /^(76|78|79)\d{6}$/;
     return swaziRegex.test(number);
   };
 
+  // Toggle contact section
   const toggleContactSection = () => {
     setIsContactCollapsed(!isContactCollapsed);
   };
 
+  // Checkout handler
   const handleCheckout = async () => {
     if (cartItems.length === 0) {
       setCheckoutError('Your cart is empty.');
@@ -116,7 +143,17 @@ export default function ShoppingCart() {
 
     const formData = new FormData();
     formData.append('orderData', JSON.stringify({
-      cartItems,
+      cartItems: cartItems.map(item => ({
+        ...item,
+        // Convert selectedExtras to a serializable format
+        selectedExtras: item.selectedExtras.map(extras => 
+          extras.map(extra => ({
+            _id: extra._id,
+            name: extra.name,
+            price: extra.price
+          }))
+        )
+      })),
       total: getCartTotal(),
       paymentMethod: selectedPaymentMethod,
       customerPhoneNumber,
@@ -147,7 +184,7 @@ export default function ShoppingCart() {
       }
     } catch (error) {
       setCheckoutError('Failed to connect to the server. Please try again later.');
-      console.log("error", error)
+      console.error("Checkout error:", error);
     } finally {
       setIsSubmitting(false);
     }
@@ -162,11 +199,7 @@ export default function ShoppingCart() {
         <div className={styles.cartContainer}>
           <div className={styles.cartHeader}>
             <h2>Your Order ({getTotalItems()})</h2>
-            <button
-              className={styles.closeButton}
-              onClick={closeCart}
-              aria-label="Close cart"
-            >
+            <button className={styles.closeButton} onClick={closeCart} aria-label="Close cart">
               ×
             </button>
           </div>
@@ -174,18 +207,15 @@ export default function ShoppingCart() {
           {cartItems.length === 0 ? (
             <div className={styles.emptyCart}>
               <p>Your cart is empty</p>
-              <button
-                className={styles.continueShopping}
-                onClick={closeCart}
-              >
+              <button className={styles.continueShopping} onClick={closeCart}>
                 Continue Shopping
               </button>
             </div>
           ) : (
             <>
               <ul className={styles.cartItems}>
-                {cartItems.map((item) => (
-                  <li key={item._id} className={styles.cartItem}>
+  {cartItems.map((item) => (
+    <li key={item._id} className={styles.cartItem}>
                     <div className={styles.itemImage}>
                       {item.image?.asset?.url && (
                         <Image
@@ -199,7 +229,8 @@ export default function ShoppingCart() {
                     </div>
                     <div className={styles.itemDetails}>
                       <h3>{item.name}</h3>
-                      <p>R{item.price.toFixed(2)}</p>
+                      <p className={styles.basePrice}>R{item.price.toFixed(2)} each</p>
+                      
                       <div className={styles.quantityControls}>
                         <button
                           onClick={() => updateQuantity(item._id, item.quantity - 1)}
@@ -208,13 +239,51 @@ export default function ShoppingCart() {
                           −
                         </button>
                         <span>{item.quantity}</span>
-                        <button
-                          onClick={() => updateQuantity(item._id, item.quantity + 1)}
-                        >
+                        <button onClick={() => updateQuantity(item._id, item.quantity + 1)}>
                           +
                         </button>
                       </div>
+
+                      {item.extras && item.extras.length > 0 && (
+          <div className={styles.extrasContainer}>
+            <h4 className={styles.extrasTitle}>Extras:</h4>
+            <div className={styles.extrasGrid}>
+              <div className={styles.extrasHeader}>
+                <span className={styles.extraNameHeader}>Extra</span>
+                {Array.from({ length: item.quantity }).map((_, idx) => (
+                  <span key={idx} className={styles.quantityHeader}>
+                    #{idx + 1}
+                  </span>
+                ))}
+              </div>
+              
+              {item.extras.map((extra) => (
+                <div key={extra._id} className={styles.extraRow}>
+                  <span className={styles.extraName}>
+                    {extra.name} (+R{extra.price.toFixed(2)})
+                  </span>
+                  {Array.from({ length: item.quantity }).map((_, idx) => (
+                    <div 
+                      key={`${extra._id}-${idx}`}
+                      className={`${styles.extraCheckbox} ${
+                        isExtraSelected(item, idx, extra) ? styles.selected : ''
+                      }`}
+                      onClick={() => updateExtraSelection(item._id, idx, extra)}
+                    >
+                      {isExtraSelected(item, idx, extra) ? '✓' : ''}
                     </div>
+                  ))}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+
+                    <div className={styles.itemTotal}>
+                      R{calculateItemTotal(item).toFixed(2)}
+                    </div>
+
                     <button
                       className={styles.removeButton}
                       onClick={() => removeFromCart(item._id)}

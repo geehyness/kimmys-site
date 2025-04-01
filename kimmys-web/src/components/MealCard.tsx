@@ -7,11 +7,7 @@ import styles from './MealCard.module.css';
 import { useState, useEffect } from 'react';
 import { Meal } from '@/types/meal';
 
-interface MealCardProps {
-  meal: Meal;
-}
-
-export default function MealCard({ meal }: MealCardProps) {
+export default function MealCard({ meal }: { meal: Meal }) {
   const { addToCart, getItemQuantity } = useShoppingCart();
   const [isHovered, setIsHovered] = useState(false);
   const [isImageLoading, setIsImageLoading] = useState(true);
@@ -33,6 +29,7 @@ export default function MealCard({ meal }: MealCardProps) {
         name: meal.name,
         price: meal.price,
         image: meal.image,
+        extras: meal.extras || [],
         isAvailable: meal.isAvailable,
         ...(meal.category && { category: meal.category })
       });
@@ -81,6 +78,21 @@ export default function MealCard({ meal }: MealCardProps) {
         {meal.description && (
           <p className={styles.description}>{meal.description}</p>
         )}
+
+        {/* Extras Section */}
+        {meal.extras && meal.extras.length > 0 && (
+          <div className={styles.extrasSection}>
+            <h4 className={styles.extrasTitle}>Available Extras:</h4>
+            <ul className={styles.extrasList}>
+              {meal.extras.map(extra => (
+                <li key={extra._id} className={styles.extraItem}>
+                  {extra.name} (+R{extra.price.toFixed(2)})
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
         <div className={styles.footer}>
           <span className={styles.price}>R{meal.price?.toFixed(2)}</span>
           <button

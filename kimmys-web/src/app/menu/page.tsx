@@ -36,30 +36,39 @@ export default function MenuPage() {
           ? `*[_type == "meal" && isAvailable == true && references(*[_type == "category" && slug.current == "${selectedCategory}"]._id)]`
           : `*[_type == "meal" && isAvailable == true]`;
 
-        const fullMealsQuery = `${mealsQuery} {
-          _id,
-          _type,
-          name,
-          description,
-          price,
-          isAvailable,
-          featured,
-          "category": category->{
+          const fullMealsQuery = `${mealsQuery} {
             _id,
             _type,
-            title,
-            slug {
-              current
-            }
-          },
-          image {
-            asset-> {
+            name,
+            description,
+            price,
+            isAvailable,
+            featured,
+            "category": category->{
               _id,
               _type,
-              url
+              title,
+              slug {
+                current
+              }
+            },
+            image {
+              asset-> {
+                _id,
+                _type,
+                url
+              }
+            },
+            // Add this part to fetch extras
+            extras[]-> {
+              _id,
+              _type,
+              name,
+              price,
+              isAvailable
             }
-          }
-        }`;
+          }`;
+  
 
         const [categoriesData, mealsData] = await Promise.all([
           client.fetch<CategoryWithCount[]>(categoriesQuery),

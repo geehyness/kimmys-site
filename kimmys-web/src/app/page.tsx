@@ -43,8 +43,17 @@ export default function HomePage() {
               _type,
               url
             }
+          },
+          // Add this part to fetch extras
+          extras[]-> {
+            _id,
+            _type,
+            name,
+            price,
+            isAvailable
           }
         }`;
+
 
         // Fetch popular categories with meal counts
         const categoriesQuery = `*[_type == "category" && popular == true] | order(title asc) {

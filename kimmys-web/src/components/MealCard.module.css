@@ -1,8 +1,8 @@
 .mealCard {
-  background: white;
   border-radius: 8px;
   overflow: hidden;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  background: white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   position: relative;
   height: 100%;
@@ -12,19 +12,18 @@
 
 .mealCard.hovered {
   transform: translateY(-5px);
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 .imageContainer {
   position: relative;
   width: 100%;
-  height: 200px;
-  overflow: hidden;
+  aspect-ratio: 16/9;
 }
 
 .image {
   object-fit: cover;
-  transition: transform 0.3s ease;
+  transition: opacity 0.3s ease;
 }
 
 .image.loading {
@@ -38,7 +37,7 @@
 .imagePlaceholder {
   width: 100%;
   height: 100%;
-  background: #f3f4f6;
+  background: #f5f5f5;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -49,45 +48,72 @@
   height: 24px;
   border: 3px solid rgba(0, 0, 0, 0.1);
   border-radius: 50%;
-  border-top-color: #e63946;
+  border-top-color: #333;
   animation: spin 1s ease-in-out infinite;
 }
 
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .categoryBadge {
   position: absolute;
-  top: 1rem;
-  right: 1rem;
-  background: #e63946;
+  top: 10px;
+  right: 10px;
+  background: rgba(0, 0, 0, 0.7);
   color: white;
-  padding: 0.25rem 0.5rem;
+  padding: 4px 8px;
   border-radius: 4px;
-  font-size: 0.75rem;
-  font-weight: 500;
-  z-index: 1;
+  font-size: 0.8rem;
 }
 
 .content {
-  padding: 1.5rem;
+  padding: 16px;
+  flex-grow: 1;
   display: flex;
   flex-direction: column;
-  flex-grow: 1;
 }
 
 .title {
-  font-size: 1.25rem;
-  margin-bottom: 0.75rem;
-  color: #1a1a1a;
+  margin: 0 0 8px;
+  font-size: 1.1rem;
+  font-weight: 600;
 }
 
 .description {
-  color: #6c757d;
-  margin-bottom: 1.25rem;
+  margin: 0 0 12px;
+  color: #666;
   font-size: 0.9rem;
   flex-grow: 1;
+}
+
+.extrasSection {
+  margin: 8px 0;
+}
+
+.extrasTitle {
+  margin: 0 0 4px;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.extrasList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.extraItem {
+  background: #f5f5f5;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  color: #555;
 }
 
 .footer {
@@ -98,41 +124,52 @@
 }
 
 .price {
-  font-weight: bold;
-  color: #e63946;
-  font-size: 1.1rem;
+  font-weight: 700;
+  color: #333;
 }
 
 .addButton {
-  background: #e63946;
+  background: #4CAF50;
   color: white;
   border: none;
-  padding: 0.5rem 1rem;
+  padding: 8px 16px;
   border-radius: 4px;
   cursor: pointer;
-  transition: background-color 0.2s ease, transform 0.2s ease;
+  font-weight: 500;
+  transition: background 0.2s;
 }
 
-.addButton:hover:not(:disabled) {
-  background: #c1121f;
-  transform: translateY(-2px);
+.addButton:hover {
+  background: #3e8e41;
 }
 
 .addButton:disabled {
-  background: #6c757d;
+  background: #cccccc;
   cursor: not-allowed;
+}
+
+.addButton.hasQuantity {
+  background: #2196F3;
+}
+
+.addButton.hasQuantity:hover {
+  background: #0b7dda;
+}
+
+.addButton.isAdding {
+  position: relative;
 }
 
 .addButton.isAdding::after {
   content: '';
   position: absolute;
-  right: 10px;
   top: 50%;
-  transform: translateY(-50%);
+  left: 50%;
   width: 16px;
   height: 16px;
-  border: 2px solid rgba(255,255,255,0.3);
+  margin: -8px 0 0 -8px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
   border-top-color: white;
   border-radius: 50%;
-  animation: spin 0.8s linear infinite;
+  animation: spin 1s linear infinite;
 }
