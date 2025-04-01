@@ -155,10 +155,10 @@ export default async function handler(
       ...(whatsappNumber && { whatsapp: whatsappNumber }),
     };
 
-    // Map cart items to order items
+    // Map cart items to order items (CORRECTED VERSION)
     const items: OrderItem[] = cartItems.map((item: CartItem) => ({
+      _key: generateRandomKey(), // Correct placement
       product: {
-        _key: generateRandomKey(), 
         _type: 'reference',
         _ref: item._id,
       },
@@ -167,8 +167,8 @@ export default async function handler(
       nameAtPurchase: item.name,
       selectedExtras: item.selectedExtras.flatMap((extras, idx) => 
         extras.map(extra => ({
+          _key: generateRandomKey(), // Correct placement
           extra: {
-            _key: generateRandomKey(), 
             _type: 'reference',
             _ref: extra._id,
           },
@@ -217,5 +217,5 @@ export default async function handler(
 }
 
 function generateRandomKey() {
-  return Math.random().toString(36).substring(2, 15);
+  return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
 }
