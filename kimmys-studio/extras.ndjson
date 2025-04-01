@@ -1,0 +1,9 @@
+// Example extra documents
+{"_type":"extra","name":"Cheese Sauce","price":5,"isAvailable":true}
+{"_type":"extra","name":"Bacon Strips","price":12,"isAvailable":true}
+{"_type":"extra","name":"Extra Egg","price":6,"isAvailable":true}
+{"_type":"extra","name":"Peri-Peri Sauce","price":5,"isAvailable":true}
+{"_type":"extra","name":"Avocado","price":10,"isAvailable":true}
+{"_type":"extra","name":"Jalapeños","price":5,"isAvailable":true}
+{"_type":"extra","name":"Coleslaw Side","price":8,"isAvailable":true}
+{"_type":"extra","name":"Sweet Chili Dip","price":4,"isAvailable":true}
