@@ -5,13 +5,13 @@ import formidable from 'formidable'
 import fs from 'fs'
 import { IncomingForm } from 'formidable'
 
-interface Extra {
+/*interface Extra {
   _id: string
   name: string
   price: number
-}
+}*/
 
-interface CartItem {
+/*interface CartItem {
   _id: string
   _type: string
   quantity: number
@@ -25,7 +25,7 @@ interface CartItem {
   }
   extras?: Extra[]
   selectedExtras: Extra[][]
-}
+}*/
 
 export const config = {
   api: {
