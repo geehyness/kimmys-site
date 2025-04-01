@@ -41,6 +41,16 @@ export default defineType({
       title: 'Is Available',
       type: 'boolean',
       initialValue: true
+    }),
+    // New Extras field
+    defineField({
+      name: 'extras',
+      title: 'Available Extras',
+      type: 'array',
+      of: [{ 
+        type: 'reference', 
+        to: [{ type: 'extra' }] 
+      }]
     })
   ]
 })
