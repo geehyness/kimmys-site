@@ -5,7 +5,6 @@ import formidable from 'formidable';
 import fs from 'fs';
 import { IncomingForm } from 'formidable';
 
-// Define your interfaces
 interface SanityReference {
   _type: 'reference';
   _ref: string;
@@ -31,34 +30,25 @@ interface CartItem {
   image?: {
     asset?: {
       _ref?: string;
-      url?: string;
     };
   };
-  extras?: Extra[];
   selectedExtras: Extra[][];
 }
 
-interface OrderItemExtra {
-  extra: SanityReference;
-  name: string;
-  price: number;
-  quantityIndex: number;
-}
-
 interface OrderItem {
+  _key: string;
   product: SanityReference;
   quantity: number;
   priceAtPurchase: number;
   nameAtPurchase: string;
-  selectedExtras: OrderItemExtra[];
+  selectedExtras?: {
+    _key: string;
+    extra: SanityReference;
+    name: string;
+    price: number;
+    quantityIndex: number;
+  }[];
   image?: SanityImage;
-}
-
-interface CustomerInfo {
-  name: string;
-  phone: string;
-  email?: string;
-  whatsapp?: string;
 }
 
 interface OrderData {
@@ -100,15 +90,7 @@ export default async function handler(
     }
 
     const orderData: OrderData = JSON.parse(fields.orderData);
-    const { 
-      cartItems, 
-      total, 
-      paymentMethod, 
-      customerPhoneNumber,
-      whatsappNumber,
-      customerName,
-      customerEmail 
-    } = orderData;
+    const { cartItems, total, paymentMethod, customerPhoneNumber, whatsappNumber, customerName, customerEmail } = orderData;
 
     // Handle payment proof upload
     let paymentProof: SanityImage | undefined;
@@ -147,55 +129,64 @@ export default async function handler(
 
     const orderNumber = `${formattedDate}-${String(orderCountToday + 1).padStart(3, '0')}`;
 
-    // Create customer info
-    const customer: CustomerInfo = {
-      name: customerName || `Customer ${customerPhoneNumber}`,
-      phone: customerPhoneNumber,
-      ...(customerEmail && { email: customerEmail }),
-      ...(whatsappNumber && { whatsapp: whatsappNumber }),
-    };
-
-    // Map cart items to order items (CORRECTED VERSION)
-    const items: OrderItem[] = cartItems.map((item: CartItem) => ({
-      _key: generateRandomKey(), // Correct placement
-      product: {
-        _type: 'reference',
-        _ref: item._id,
-      },
-      quantity: item.quantity,
-      priceAtPurchase: item.price,
-      nameAtPurchase: item.name,
-      selectedExtras: item.selectedExtras.flatMap((extras, idx) => 
-        extras.map(extra => ({
-          _key: generateRandomKey(), // Correct placement
-          extra: {
-            _type: 'reference',
-            _ref: extra._id,
-          },
-          name: extra.name,
-          price: extra.price,
-          quantityIndex: idx
-        }))
-      ),
-      image: item.image?.asset?._ref ? {
-        _type: 'image',
-        asset: {
+    // Create order items with proper typing
+    const items: OrderItem[] = cartItems.map((item) => {
+      const orderItem: OrderItem = {
+        _key: generateRandomKey(),
+        product: {
           _type: 'reference',
-          _ref: item.image.asset._ref
-        }
-      } : undefined
-    }));
+          _ref: item._id,
+        },
+        quantity: item.quantity,
+        priceAtPurchase: item.price,
+        nameAtPurchase: item.name,
+      };
+
+      // Add selected extras if they exist
+      if (item.selectedExtras && item.selectedExtras.length > 0) {
+        orderItem.selectedExtras = item.selectedExtras.flatMap((extras, idx) => 
+          extras.map(extra => ({
+            _key: generateRandomKey(),
+            extra: {
+              _type: 'reference',
+              _ref: extra._id,
+            },
+            name: extra.name,
+            price: extra.price,
+            quantityIndex: idx
+          }))
+        );
+      }
+
+      // Add image if it exists
+      if (item.image?.asset?._ref) {
+        orderItem.image = {
+          _type: 'image',
+          asset: {
+            _type: 'reference',
+            _ref: item.image.asset._ref
+          }
+        };
+      }
+
+      return orderItem;
+    });
 
     // Create the order document
     const order = {
       _type: 'order',
       orderNumber,
-      customer,
+      customer: {
+        name: customerName || `Customer ${customerPhoneNumber}`,
+        phone: customerPhoneNumber,
+        ...(customerEmail && { email: customerEmail }),
+        ...(whatsappNumber && { whatsapp: whatsappNumber }),
+      },
       items,
       totalAmount: total,
       paymentMethod: paymentMethod.toLowerCase(),
       paymentStatus: paymentProof ? 'paid' : 'pending',
-      paymentProof,
+      ...(paymentProof && { paymentProof }),
       orderDate: currentDate.toISOString(),
       status: 'received'
     };
