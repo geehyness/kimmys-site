@@ -7,6 +7,7 @@ import { toast, Toaster } from 'react-hot-toast';
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 
 interface PaymentProof {
   _type: 'image';
@@ -65,13 +66,16 @@ interface Order {
 type ActiveTab = 'received' | 'preparing' | 'ready' | 'completed';
 
 export default function Home() {
+  const router = useRouter();
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [authChecked, setAuthChecked] = useState(false);
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isCancelledPopupOpen, setIsCancelledPopupOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<ActiveTab>('received');
 
-  // Safely filter orders with fallbacks for missing status
+  // Move all hooks to the top before any conditional returns
   const receivedOrders = useMemo(() =>
     orders.filter(order => order?.status === 'received'), [orders]);
   const preparingOrders = useMemo(() =>
@@ -91,9 +95,14 @@ export default function Home() {
       case 'completed': return completedOrders;
       default: return receivedOrders;
     }
-  }, [activeTab, completedOrders, preparingOrders, readyOrders, receivedOrders]);
+  }, [activeTab, receivedOrders, preparingOrders, readyOrders, completedOrders]);
+
+  const toggleCancelledPopup = () => {
+    setIsCancelledPopupOpen(!isCancelledPopupOpen);
+  };
 
   const fetchOrders = useCallback(async () => {
+    if (!isAuthenticated) return;
     try {
       setLoading(true);
       setError(null);
@@ -148,7 +157,6 @@ export default function Home() {
       const data = await client.fetch<Order[]>(query);
       if (!data) throw new Error('No data returned from Sanity');
 
-      // Validate and clean data
       const validatedData = data.map(order => ({
         ...order,
         orderNumber: order.orderNumber || `UNKNOWN-${order._id.slice(0, 5)}`,
@@ -174,15 +182,35 @@ export default function Home() {
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [isAuthenticated]); // Add isAuthenticated as a dependency
 
+  // Auth check
   useEffect(() => {
-    fetchOrders();
-  }, [fetchOrders]);
+    const checkAuth = async () => {
+      try {
+        const response = await fetch('/api/auth/check', { credentials: 'include' });
+        if (response.ok) {
+          setIsAuthenticated(true);
+        } else {
+          router.push('/login');
+        }
+      } catch (err) {
+        console.error('Auth check failed:', err);
+        router.push('/login');
+      } finally {
+        setAuthChecked(true);
+      }
+    };
 
-  const toggleCancelledPopup = () => {
-    setIsCancelledPopupOpen(!isCancelledPopupOpen);
-  };
+    checkAuth();
+  }, [router]);
+
+  // Fetch orders on component mount if authenticated
+  useEffect(() => {
+    if (isAuthenticated) {
+      fetchOrders();
+    }
+  }, [isAuthenticated, fetchOrders]);
 
   const handleMoveOrder = useCallback(async (orderId: string, newStatus: Order['status']) => {
     if (!newStatus) {
@@ -247,12 +275,17 @@ export default function Home() {
                             order.paymentMethod === 'ewallet' ? 'E-Wallet' :
                             order.paymentMethod === 'cash' ? 'Cash' : 'Unknown';
 
+    const totalItems = order.items?.reduce((sum, item) => sum + (item.quantity || 0), 0) || 0;
+
     return (
       <li key={order._id} className="border border-gray-200 rounded-md p-3 mb-3 shadow-sm hover:shadow-md transition-shadow bg-white text-sm">
         {/* Order Header */}
         <div className="flex justify-between items-start mb-2 pb-1 border-b border-gray-100">
           <div>
-            <h3 className="font-semibold text-gray-800 text-base">Order #{orderNumber}</h3>
+            <h3 className="font-semibold text-gray-800 text-base">
+              Order #{orderNumber}
+              <span className="ml-2 text-sm font-medium text-blue-600">({totalItems} items)</span>
+            </h3>
             <p className="text-xs text-gray-500">{orderDate}</p>
           </div>
           <div className="flex flex-col items-end gap-1">
@@ -275,7 +308,6 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Payment Info - Shown for received, preparing, and ready orders */}
         {(status === 'received' || status === 'preparing' || status === 'ready') && (
           <div className="mb-2 grid grid-cols-2 gap-2 text-xs">
             <div>
@@ -415,7 +447,7 @@ export default function Home() {
             </div>
             <div className="flex justify-between items-center mb-1">
               <span className="font-medium text-gray-600 text-xxs">Items</span>
-              <span className="text-gray-700">{order.items?.length || 0}</span>
+              <span className="text-gray-700 font-medium">{totalItems}</span>
             </div>
             <div className="flex justify-between items-center">
               <span className="font-medium text-gray-600 text-xxs">Total</span>
@@ -467,9 +499,18 @@ export default function Home() {
     );
   };
 
+  if (!authChecked) {
+    return (
+      <div className="p-4 md:p-6 bg-gray-50 min-h-screen flex items-center justify-center">
+        <div>Loading authentication...</div>
+      </div>
+    );
+  }
+
   if (loading) {
     return (
       <div className="p-4 md:p-6 bg-gray-50 min-h-screen">
+        {/* Your skeleton loader */}
         <div className="max-w-7xl mx-auto">
           <div className="flex justify-between items-center mb-6">
             <Skeleton width={200} height={32} />
@@ -495,6 +536,7 @@ export default function Home() {
   if (error) {
     return (
       <div className="p-4 md:p-6 bg-gray-50 min-h-screen flex items-center justify-center">
+        {/* Your error display */}
         <div className="max-w-md bg-white p-6 rounded-lg shadow-md">
           <h2 className="text-xl font-bold text-red-600 mb-4">Error Loading Orders</h2>
           <p className="text-gray-700 mb-4">{error}</p>
@@ -509,6 +551,7 @@ export default function Home() {
     );
   }
 
+  // Main render
   return (
     <div className="p-4 md:p-6 bg-gray-50 min-h-screen">
       <div className="max-w-7xl mx-auto">
@@ -523,7 +566,7 @@ export default function Home() {
         </div>
 
         {/* Mobile Tabs */}
-        <div className="md:hidden mb-4 sticky top-0 z-10 bg-gray-50">
+        <div className="md:hidden mb-4 sticky top-[64px] z-10 bg-gray-50">
           <div className="flex overflow-x-auto pb-2">
             {[
               { id: 'received', label: 'Received', count: receivedOrders.length },
@@ -547,10 +590,14 @@ export default function Home() {
         </div>
 
         {/* Desktop Grid */}
-        <div className="hidden md:grid grid-cols-4 gap-6">
+        <div
+          className="hidden md:grid grid-cols-4 gap-6 sticky top-[64px] bg-gray-50 z-10"
+        >
           <div className="bg-white rounded-lg shadow">
-            <h2 className="font-semibold text-lg py-2 px-4 bg-gray-100 sticky top-0 z-10">Received ({receivedOrders.length})</h2>
-            <ul className="space-y-2 p-4 pt-2 max-h-[calc(100vh - 180px)] overflow-y-auto">
+            <div className="sticky top-0 z-10 bg-gray-100">
+              <h2 className="font-semibold text-lg py-2 px-4">Received ({receivedOrders.length})</h2>
+            </div>
+            <ul className="space-y-2 p-4 pt-2 max-h-[calc(100vh - 200px)] overflow-y-auto">
               {receivedOrders.length > 0 ? (
                 receivedOrders.map(order => renderOrderCard(order, 'received'))
               ) : (
@@ -559,8 +606,10 @@ export default function Home() {
             </ul>
           </div>
           <div className="bg-white rounded-lg shadow">
-            <h2 className="font-semibold text-lg py-2 px-4 bg-gray-100 sticky top-0 z-10">Preparing ({preparingOrders.length})</h2>
-            <ul className="space-y-2 p-4 pt-2 max-h-[calc(100vh - 180px)] overflow-y-auto">
+            <div className="sticky top-0 z-10 bg-gray-100">
+              <h2 className="font-semibold text-lg py-2 px-4">Preparing ({preparingOrders.length})</h2>
+            </div>
+            <ul className="space-y-2 p-4 pt-2 max-h-[calc(100vh - 200px)] overflow-y-auto">
               {preparingOrders.length > 0 ? (
                 preparingOrders.map(order => renderOrderCard(order, 'preparing'))
               ) : (
@@ -569,8 +618,10 @@ export default function Home() {
             </ul>
           </div>
           <div className="bg-white rounded-lg shadow">
-            <h2 className="font-semibold text-lg py-2 px-4 bg-gray-100 sticky top-0 z-10">Ready ({readyOrders.length})</h2>
-            <ul className="space-y-2 p-4 pt-2 max-h-[calc(100vh - 180px)] overflow-y-auto">
+            <div className="sticky top-0 z-10 bg-gray-100">
+              <h2 className="font-semibold text-lg py-2 px-4">Ready ({readyOrders.length})</h2>
+            </div>
+            <ul className="space-y-2 p-4 pt-2 max-h-[calc(100vh - 200px)] overflow-y-auto">
               {readyOrders.length > 0 ? (
                 readyOrders.map(order => renderOrderCard(order, 'ready'))
               ) : (
@@ -579,8 +630,10 @@ export default function Home() {
             </ul>
           </div>
           <div className="bg-white rounded-lg shadow">
-            <h2 className="font-semibold text-lg py-2 px-4 bg-gray-100 sticky top-0 z-10">Completed ({completedOrders.length})</h2>
-            <ul className="space-y-2 p-4 pt-2 max-h-[calc(100vh - 180px)] overflow-y-auto">
+            <div className="sticky top-0 z-10 bg-gray-100">
+              <h2 className="font-semibold text-lg py-2 px-4">Completed ({completedOrders.length})</h2>
+            </div>
+            <ul className="space-y-2 p-4 pt-2 max-h-[calc(100vh - 200px)] overflow-y-auto">
               {completedOrders.length > 0 ? (
                 completedOrders.map(order => renderOrderCard(order, 'completed'))
               ) : (
