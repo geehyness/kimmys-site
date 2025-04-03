@@ -24,3 +24,25 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  #printable-content, #printable-content * {
+    visibility: visible;
+  }
+  #printable-content {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+  }
+  .print-hidden {
+    display: none !important;
+  }
+
+  .page-break { 
+    page-break-after: always;
+  }
+}
